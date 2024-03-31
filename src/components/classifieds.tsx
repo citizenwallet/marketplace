@@ -4,8 +4,9 @@
  */
 import { sql } from "@vercel/postgres";
 import Classified from "./Classified";
-import NewClassified from "./NewClassified";
 import Link from "next/link";
+export const dynamic = "force-dynamic";
+
 const classifieds = [
   {
     id: 1,

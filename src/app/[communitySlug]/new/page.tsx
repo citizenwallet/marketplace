@@ -14,7 +14,18 @@ export default function Home({
   if (!communitySlug) return null;
   if (!account || account === "undefined")
     return (
-      <Error msg="Make sure you are running opening this page from the Citizen Wallet app (available on the App Store and Google Play Store)" />
+      <Error>
+        Make sure you are running opening this page from the Citizen Wallet app
+        (available on the{" "}
+        <a href="https://apps.apple.com/app/citizen-wallet/id6460822891">
+          App Store
+        </a>{" "}
+        and{" "}
+        <a href="https://play.google.com/store/apps/details?id=xyz.citizenwallet.wallet">
+          Google Play Store
+        </a>
+        )
+      </Error>
     );
 
   return (
