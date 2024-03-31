@@ -12,7 +12,10 @@ export default function Home({
   const account = searchParams.account;
 
   if (!communitySlug) return null;
-  if (!account) return <Error msg="account missing" />;
+  if (!account || account === "undefined")
+    return (
+      <Error msg="Make sure you are running opening this page from the Citizen Wallet app (available on the App Store and Google Play Store)" />
+    );
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-4">
