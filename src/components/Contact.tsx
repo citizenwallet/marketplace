@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-const icons = {
+type IconMap = Record<string, string>;
+
+const icons: IconMap = {
   whatsapp: "/whatsapp-square.svg",
   telegram: "/telegram-square.svg",
   phone: "/phone.svg",
@@ -22,6 +24,7 @@ export default async function Profile({ data }: { data: any }) {
       case "phone":
         return `tel:${address}`;
     }
+    return "#";
   }
 
   return (

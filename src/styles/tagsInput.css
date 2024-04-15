@@ -1,5 +1,5 @@
 .tag-wrapper {
-  @apply font-bold px-2 py-1 border-2 rounded-lg mr-1;
+  @apply font-bold px-2 py-1 border-2 border-gray-300 rounded-lg mr-1;
 }
 
 .tag-wrapper button {

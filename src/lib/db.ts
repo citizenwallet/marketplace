@@ -2,6 +2,11 @@ import { Pool, PoolClient, QueryResultRow } from "pg";
 import format from "pg-format";
 import fs from "fs";
 
+type ErrorType = {
+  message: string;
+  shortMessage?: string;
+};
+
 export const pool = new Pool({
   user: process.env.POSTGRES_USER,
   host: process.env.POSTGRES_HOST,
@@ -74,7 +79,7 @@ export async function dbreset() {
   try {
     await client.query(ddl);
   } catch (e) {
-    throw new Error("Error resetting database: " + e.message);
+    throw new Error("Error resetting database: " + (e as ErrorType).message);
   }
 }
 

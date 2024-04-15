@@ -1,7 +1,11 @@
 import { sql } from "@/lib/db";
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
+interface ExtendedRequest extends Request {
+  nextUrl: URL;
+}
+
+export async function GET(request: ExtendedRequest) {
   const searchParams = request.nextUrl.searchParams;
   const communitySlug = searchParams.get("communitySlug");
   const { rows } =

@@ -6,10 +6,7 @@ const KeyCodes = {
   enter: 13,
 };
 
-interface Tag {
-  id: number;
-  text: string;
-}
+import { Tag } from "react-tag-input";
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
@@ -20,9 +17,9 @@ export default function TagInput({
   communitySlug: string;
   onChange: Function | undefined;
 }) {
-  const suggestions: Tag[] = [].map((row) => {
+  const suggestions: Tag[] = [].map((row: { id: number; slug: string }) => {
     return {
-      id: row.id,
+      id: row.id + "",
       text: row.slug,
     } as Tag;
   });
@@ -62,12 +59,20 @@ export default function TagInput({
   return (
     <div className="app">
       <ReactTags
-        tags={tags}
-        suggestions={suggestions}
+        tags={tags as Tag[]}
+        suggestions={suggestions as Tag[]}
         delimiters={delimiters}
         handleDelete={handleDelete}
-        handleAddition={handleAddition}
-        handleDrag={handleDrag}
+        handleAddition={
+          handleAddition as (tag: { id: string; text: string }) => void
+        }
+        handleDrag={
+          handleDrag as (
+            tag: { id: string; text: string },
+            currPos: number,
+            newPos: number
+          ) => void
+        }
         handleTagClick={handleTagClick}
         inputFieldPosition="bottom"
         placeholder="Add a new tag"

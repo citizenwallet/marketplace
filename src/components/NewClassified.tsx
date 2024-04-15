@@ -28,6 +28,11 @@ const setExpiryDate = (selector: string): Date => {
   }
 };
 
+interface Tag {
+  id: string;
+  text: string;
+}
+
 export default function NewClassified({
   account,
   communitySlug,
@@ -52,7 +57,7 @@ export default function NewClassified({
     profile: null,
   });
 
-  const firstInputRef = useRef(null);
+  const firstInputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
     if (firstInputRef.current) {
       firstInputRef.current.focus();
@@ -73,8 +78,8 @@ export default function NewClassified({
     });
   };
 
-  const handleTagsInput = (tags: string[]) => {
-    handleChange({ target: { id: "tags", value: tags.map((t) => t.id) } });
+  const handleTagsInput = (tags: Tag[]) => {
+    handleChange({ target: { id: "tags", value: tags.map((t: Tag) => t.id) } });
   };
 
   const handleChange = (event: any) => {

@@ -29,6 +29,10 @@ interface ChainMap {
   [key: number]: any;
 }
 
+type ErrorType = {
+  shortMessage: string;
+};
+
 const chains: ChainMap = {
   137: polygon,
   80001: polygonMumbai,
@@ -50,6 +54,7 @@ export default class CitizenWalletCommunity {
   constructor(communitySlug: string) {
     this.communitySlug = communitySlug;
     this.configUrl = CONFIG_URL;
+    this.symbol = "";
   }
 
   initClient = async () => {
@@ -113,7 +118,7 @@ export default class CitizenWalletCommunity {
       return await this.fetchJSON(ipfsHash);
     } catch (e) {
       // console.error(JSON.stringify(e, null, 2));
-      console.error(e.shortMessage);
+      console.error((e as ErrorType).shortMessage);
       return null;
     }
   };
