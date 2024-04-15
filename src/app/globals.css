@@ -10,24 +10,6 @@
   --color-secondary: 111 114 185;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 30, 30, 30;
-    --background-end-rgb: 20, 20, 20;
-    --color-primary: 255 115 179;
-    --color-secondary: 111 114 185;
-  }
-  button {
-    @apply bg-white text-black;
-  }
-  form input,
-  textarea,
-  select {
-    @apply text-black;
-  }
-}
-
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -44,10 +26,55 @@ body {
   }
 }
 
+p a {
+  @apply text-blue-800;
+}
+
 h1 {
   @apply text-4xl font-bold;
 }
 
+h2 {
+  @apply text-2xl font-bold;
+}
+
+h3 {
+  @apply text-xl font-bold pt-4;
+}
+
 select {
   @apply w-full p-2 rounded-md;
+}
+
+.button {
+  @apply bg-black text-white p-3 rounded-md;
+}
+
+.button:hover {
+  @apply bg-gray-800;
+}
+
+.button:active {
+  @apply bg-gray-900 scale-90;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 30, 30, 30;
+    --background-end-rgb: 20, 20, 20;
+    --color-primary: 255 115 179;
+    --color-secondary: 111 114 185;
+  }
+  button {
+    @apply bg-white text-black;
+  }
+  form input,
+  textarea,
+  select {
+    @apply text-black;
+  }
+  .button {
+    @apply rounded-lg border-white border-2;
+  }
 }

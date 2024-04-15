@@ -1,0 +1,18 @@
+.tag-wrapper {
+  @apply font-bold px-2 py-1 border-2 rounded-lg mr-1;
+}
+
+.tag-wrapper button {
+  @apply ml-1;
+}
+
+.react-tags-wrapper {
+  @apply flex flex-row items-start flex-wrap align-top;
+}
+
+.ReactTags__selected {
+  @apply my-2;
+}
+.ReactTags__tagInputField {
+  @apply p-1 rounded-md mt-1 w-36 px-2;
+}

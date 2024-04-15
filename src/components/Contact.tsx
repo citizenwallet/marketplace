@@ -1,0 +1,45 @@
+import Link from "next/link";
+
+const icons = {
+  whatsapp: "/whatsapp-square.svg",
+  telegram: "/telegram-square.svg",
+  phone: "/phone.svg",
+  email: "/email.svg",
+};
+
+export default async function Profile({ data }: { data: any }) {
+  function getLink(service: string, address: string) {
+    switch (service) {
+      case "whatsapp":
+        return `https://wa.me/${data.contactAddress.replace(
+          /^00|\+|\s|\./g,
+          ""
+        )}?text=${encodeURIComponent(data.title)}`;
+      case "telegram":
+        return `https://t.me/${data.contactAddress.replace(/@/, "")}`;
+      case "email":
+        return `mailto:${address}?subject=${encodeURIComponent(data.title)}`;
+      case "phone":
+        return `tel:${address}`;
+    }
+  }
+
+  return (
+    <div className="my-4">
+      <h3 className="text-2xl font-bold">Contact</h3>
+      <Link href={getLink(data.contactService, data.contactAddress)}>
+        <div className="flex flex-col text-center justify-center w-32 my-4">
+          <center>
+            <img
+              src={icons[data.contactService]}
+              width={64}
+              height={64}
+              alt={data.contactService}
+            />
+          </center>
+          <div className="text-sm">{data.contactAddress}</div>
+        </div>
+      </Link>
+    </div>
+  );
+}

@@ -32,4 +32,25 @@ describe("lib.citizenwallet", () => {
     console.log(profileData);
     expect(profileData).toEqual(profile);
   });
+
+  it("gets the profile from username", async () => {
+    const profileData = await cw.getProfileFromUsername(profile.username);
+    expect(profileData).toEqual(profile);
+  });
+
+  it("returns null when username not found", async () => {
+    const profileData = await cw.getProfileFromUsername("none");
+    expect(profileData).toEqual(null);
+  });
+
+  it("gets latest transactions", async () => {
+    const transactions = await cw.getTransactions(profile.account);
+    expect(transactions.length).toBeGreaterThan(0);
+    expect(transactions[0].from).toBe(profile.account);
+  });
+
+  it("gets the balance", async () => {
+    const balance = await cw.getBalance(profile.account);
+    expect(balance).toBeGreaterThan(0);
+  });
 });

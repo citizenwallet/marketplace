@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import { createPublicClient, http } from "viem";
+import { ethers } from "ethers";
 import {
   celo,
   celoAlfajores,
@@ -12,8 +12,17 @@ import {
 } from "viem/chains";
 
 import ProfileABI from "smartcontracts/build/contracts/profile/Profile.abi.json";
+import ERC20ABI from "smartcontracts/build/contracts/erc20/ERC20.abi.json";
 
-export const CONFIG_URL = "/api/getConfig";
+const protocol = ["production", "preview"].includes(process.env.NODE_ENV)
+  ? "https"
+  : "http";
+
+const CONFIG_URL =
+  process.env.NODE_ENV === "test"
+    ? `${protocol}://config.internal.citizenwallet.xyz/v3/communities.json`
+    : `${process.env.WEBAPP_URL}/api/getConfig`;
+
 export const IPFS_BASE_URL = "https://ipfs.internal.citizenwallet.xyz";
 
 interface ChainMap {
@@ -32,12 +41,15 @@ const chains: ChainMap = {
 };
 
 export default class CitizenWalletCommunity {
+  configUrl: string;
   communitySlug: string;
   config: any;
   client: any;
+  symbol: string;
 
   constructor(communitySlug: string) {
     this.communitySlug = communitySlug;
+    this.configUrl = CONFIG_URL;
   }
 
   initClient = async () => {
@@ -55,12 +67,12 @@ export default class CitizenWalletCommunity {
 
   loadConfig = async () => {
     if (this.config) return this.config;
-    const response = await fetch(CONFIG_URL, {
-      mode: "no-cors",
+    const response = await fetch(this.configUrl, {
+      mode: "cors",
     });
     if (!response.ok) {
       throw new Error(
-        `HTTP error. Unable to fetch ${CONFIG_URL}. Response status: ${response.status}`
+        `HTTP error. Unable to fetch ${this.configUrl}. Response status: ${response.status}`
       );
     }
     const configs = await response.json();
@@ -68,6 +80,7 @@ export default class CitizenWalletCommunity {
       (config: any) => config.community.alias === this.communitySlug
     );
     this.config = config;
+    this.symbol = config.token.symbol;
     return config;
   };
 
@@ -82,7 +95,53 @@ export default class CitizenWalletCommunity {
       args: [account],
     });
 
-    return this.fetchJSON(ipfsHash);
+    return await this.fetchJSON(ipfsHash);
+  };
+
+  getProfileFromUsername = async (username: string) => {
+    await this.initClient();
+    const contractAddress = this.config.profile.address;
+
+    const username32 = ethers.encodeBytes32String(username);
+    try {
+      const ipfsHash = await this.client.readContract({
+        address: contractAddress,
+        abi: ProfileABI,
+        functionName: "getFromUsername",
+        args: [username32],
+      });
+      return await this.fetchJSON(ipfsHash);
+    } catch (e) {
+      // console.error(JSON.stringify(e, null, 2));
+      console.error(e.shortMessage);
+      return null;
+    }
+  };
+
+  getBalance = async (account: string) => {
+    await this.initClient();
+    const contractAddress = this.config.token.address;
+    const decimals = this.config.token.decimals;
+
+    const balance = await this.client.readContract({
+      address: contractAddress,
+      abi: ERC20ABI,
+      functionName: "balanceOf",
+      args: [account],
+    });
+
+    return parseFloat(ethers.formatUnits(balance, decimals));
+  };
+
+  getTransactions = async (account: string) => {
+    await this.loadConfig();
+    const apiUrl = this.config.indexer.url;
+    const apiCall = `${apiUrl}/logs/transfers/${this.config.token.address}/${account}?limit=10`;
+    const response = await fetch(apiCall, {
+      headers: { Authorization: "Bearer x" },
+    });
+    const data = await response.json();
+    return data.array;
   };
 
   fetchFromIPFS = async (ipfsHash: string) => {
@@ -101,21 +160,3 @@ export default class CitizenWalletCommunity {
     return ipfsUrl;
   };
 }
-
-export const useCommunity = (communitySlug: string) => {
-  const [community, setCommunity] = useState<any>(null);
-  useEffect(() => {
-    const cw = new CitizenWalletCommunity(communitySlug);
-    cw.loadConfig().then((community) => setCommunity(community));
-  }, [communitySlug]);
-  return [community];
-};
-
-export const useProfile = (communitySlug: string, account: string) => {
-  const [profile, setProfile] = useState<any>(null);
-  useEffect(() => {
-    const community = new CitizenWalletCommunity(communitySlug);
-    community.getProfile(account).then((profile) => setProfile(profile));
-  }, [communitySlug, account]);
-  return [profile];
-};

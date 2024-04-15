@@ -1,5 +1,6 @@
 import NewClassified from "@/components/NewClassified";
-import Error from "@/components/Error";
+import AccountRequiredError from "@/components/AccountRequiredError";
+import TopNavigationBar from "@/components/TopNavigationBar";
 
 export default function Home({
   params,
@@ -12,24 +13,11 @@ export default function Home({
   const account = searchParams.account;
 
   if (!communitySlug) return null;
-  if (!account || account === "undefined")
-    return (
-      <Error>
-        Make sure you are running opening this page from the Citizen Wallet app
-        (available on the{" "}
-        <a href="https://apps.apple.com/app/citizen-wallet/id6460822891">
-          App Store
-        </a>{" "}
-        and{" "}
-        <a href="https://play.google.com/store/apps/details?id=xyz.citizenwallet.wallet">
-          Google Play Store
-        </a>
-        )
-      </Error>
-    );
+  if (!account || account === "undefined") return <AccountRequiredError />;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-4">
+    <main className="flex min-h-screen flex-col items-center p-4">
+      <TopNavigationBar communitySlug={communitySlug} account={account} />
       <NewClassified account={account} communitySlug={communitySlug} />
     </main>
   );
