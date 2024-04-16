@@ -152,7 +152,7 @@ export default class CitizenWalletCommunity {
       console.error(
         ">>> unable to getTransactions",
         apiCall,
-        res.status,
+        response.status,
         response.statusText,
         e
       );

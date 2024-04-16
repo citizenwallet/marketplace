@@ -35,16 +35,7 @@ interface Tag {
   text: string;
 }
 
-interface Post {
-  id: number;
-  title: string;
-  text: string;
-  tags: Tag[];
-  displayPrice?: number;
-  price: string;
-  contactService: string;
-  contactAddress: string;
-}
+import type { Post } from "@/types";
 
 export default function EditPost({
   account,
@@ -59,7 +50,7 @@ export default function EditPost({
   const [community] = useCommunity(communitySlug);
   const [profile] = useProfile(communitySlug, account);
 
-  const [formData, setFormData] = useState(data || {});
+  const [formData, setFormData] = useState((data as any) || {});
 
   const firstInputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -220,7 +211,7 @@ export default function EditPost({
         <TagInput
           communitySlug={communitySlug}
           onChange={handleTagsInput}
-          defaultValue={data.tags.map((t: string) => ({ id: t, text: t }))}
+          defaultValue={data.tags?.map((t: string) => ({ id: t, text: t }))}
         />
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Tags help people find your {formData.type.toLowerCase()}
@@ -234,7 +225,9 @@ export default function EditPost({
             step={0.01}
             className="mr-2"
             id="displayPrice"
-            defaultValue={data.displayPrice || parseInt(data.price) / 10 ** 6}
+            defaultValue={
+              data.displayPrice || (data.price && data.price / 10 ** 6)
+            }
             placeholder="Price"
             onChange={handleChange}
           />
@@ -292,7 +285,7 @@ export default function EditPost({
       <div className="space-y-2">
         <Label htmlFor="expiryDateSelector">Expiry date</Label>
         <select id="expiryDateSelector" onChange={handleChangeExpiryDate}>
-          <option value={data.expiryDate}>
+          <option value={data.expiryDate.toString()}>
             {moment(formData.expiryDate).format("MMMM Do YYYY")}
           </option>
           <option value="week">one week</option>

@@ -2,6 +2,7 @@ import EditPost from "@/components/EditPost";
 import Link from "next/link";
 import TopNavigationBar from "@/components/TopNavigationBar";
 import { sql } from "@/lib/db";
+import type { Post } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export default async function ViewPost({
   params: any;
   searchParams: any;
 }) {
-  const { rows } =
+  const { rows }: { rows: Post[] } =
     await sql`SELECT * from posts where "communitySlug"=${params.communitySlug} AND id=${params.postId}`;
 
   console.log(">>> rows", rows);
@@ -24,7 +25,7 @@ export default async function ViewPost({
       />
       <div className="items-center">
         <EditPost
-          data={rows[0]}
+          data={rows[0] as Post}
           communitySlug={params.communitySlug}
           account={searchParams.account}
         />

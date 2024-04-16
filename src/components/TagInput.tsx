@@ -77,7 +77,7 @@ export default function TagInput({
         }
         handleTagClick={handleTagClick}
         inputFieldPosition="bottom"
-        inputProps={{ enterkeyhint: "enter" }}
+        inputProps={{ enterKeyHint: "enter" }}
         placeholder="Add a new tag"
         autocomplete
       />
