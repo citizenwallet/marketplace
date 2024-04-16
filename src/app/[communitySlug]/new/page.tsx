@@ -1,4 +1,4 @@
-import NewClassified from "@/components/NewClassified";
+import NewPost from "@/components/NewPost";
 import AccountRequiredError from "@/components/AccountRequiredError";
 import TopNavigationBar from "@/components/TopNavigationBar";
 
@@ -18,7 +18,7 @@ export default function Home({
   return (
     <main className="flex min-h-screen flex-col items-center p-4">
       <TopNavigationBar communitySlug={communitySlug} account={account} />
-      <NewClassified account={account} communitySlug={communitySlug} />
+      <NewPost account={account} communitySlug={communitySlug} />
     </main>
   );
 }

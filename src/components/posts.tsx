@@ -3,11 +3,11 @@
  * @see https://v0.dev/t/WVlAuvT0ryO
  */
 import { sql } from "@/lib/db";
-import ClassifiedRow from "./ClassifiedRow";
+import PostRow from "./PostRow";
 import Link from "next/link";
 export const dynamic = "force-dynamic";
 
-export async function Classifieds({
+export async function Posts({
   communitySlug,
   account,
 }: {
@@ -15,7 +15,7 @@ export async function Classifieds({
   account: string;
 }) {
   const { rows } =
-    await sql`SELECT * from classifieds where "communitySlug"=${communitySlug} ORDER BY id DESC`;
+    await sql`SELECT * from posts where "communitySlug"=${communitySlug} ORDER BY id DESC`;
 
   console.log(">>> rows", communitySlug, rows);
 
@@ -23,7 +23,7 @@ export async function Classifieds({
     <div>
       <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">Classifieds</h1>
+          <h1 className="text-3xl font-bold">Market place</h1>
           <p className="text-gray-500 dark:text-gray-400">
             Share what you are looking for or what you have to offer.
           </p>
@@ -33,19 +33,15 @@ export async function Classifieds({
             href={`/${communitySlug}/new?account=${account}`}
             className="button"
           >
-            New Classified
+            New Post
           </Link>
         </div>
       </div>
       <div>
         <div className="pt-8">
           <div className="space-y-2">
-            {rows.map((classified) => (
-              <ClassifiedRow
-                key={classified.id}
-                data={classified}
-                account={account}
-              />
+            {rows.map((post) => (
+              <PostRow key={post.id} data={post} account={account} />
             ))}
           </div>
           <div className="border-t border-gray-200 dark:border-gray-800" />

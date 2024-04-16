@@ -4,7 +4,7 @@ import { getUrlFromIPFS } from "@/lib/ipfs";
 import { QueryResultRow } from "@vercel/postgres";
 import Link from "next/link";
 
-export default function ClassifiedRow({
+export default function PostRow({
   data,
   account,
 }: {
@@ -13,7 +13,7 @@ export default function ClassifiedRow({
 }) {
   return (
     <Link href={`/${data.communitySlug}/${data.id}?account=${account}`}>
-      <div className="my-2 p-4 pr-2 flex flex-row hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg">
+      <div className="my-2 p-4 pr-2 flex flex-row active:bg-gray-300 dark:active:bg-gray-600 rounded-lg">
         <div className="space-y-1 w-full">
           <h2 className="text-2xl font-bold">{data.title}</h2>
           <div className="flex items-center space-x-2">

@@ -47,15 +47,17 @@ select {
 }
 
 .button {
-  @apply bg-black text-white p-3 rounded-md;
+  @apply bg-black text-white p-3 rounded-md block text-center w-full !py-4;
 }
 
+/* This creates latency on mobile: https://css-tricks.com/annoying-mobile-double-tap-link-issue/
 .button:hover {
   @apply bg-gray-800;
 }
+*/
 
 .button:active {
-  @apply bg-gray-900 scale-90;
+  @apply bg-gray-900 scale-95;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -12,9 +12,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 export default function TagInput({
   communitySlug,
+  defaultValue,
   onChange,
 }: {
   communitySlug: string;
+  defaultValue?: Tag[];
   onChange: Function | undefined;
 }) {
   const suggestions: Tag[] = [].map((row: { id: number; slug: string }) => {
@@ -24,7 +26,7 @@ export default function TagInput({
     } as Tag;
   });
 
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>(defaultValue || []);
 
   const handleDelete = (i: number) => {
     const newTags = tags.filter((tag, index) => index !== i);
@@ -75,6 +77,7 @@ export default function TagInput({
         }
         handleTagClick={handleTagClick}
         inputFieldPosition="bottom"
+        inputProps={{ enterkeyhint: "enter" }}
         placeholder="Add a new tag"
         autocomplete
       />

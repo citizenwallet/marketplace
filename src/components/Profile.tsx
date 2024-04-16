@@ -1,5 +1,5 @@
 import { sql } from "@/lib/db";
-import ClassifiedRow from "./ClassifiedRow";
+import PostRow from "./PostRow";
 import Link from "next/link";
 export const dynamic = "force-dynamic";
 import CitizenWalletCommunity from "@/lib/citizenwallet";
@@ -22,8 +22,8 @@ export default async function Profile({
   excludeId?: number;
 }) {
   const { rows } =
-    await sql`SELECT * from classifieds where "communitySlug"=${communitySlug} AND "authorAccount"=${profile.account} AND id!=${excludeId} ORDER BY id DESC`;
-  console.log(">>> fetching classifieds account", profile.account, rows);
+    await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND "authorAccount"=${profile.account} AND id!=${excludeId} ORDER BY id DESC`;
+  console.log(">>> fetching posts account", profile.account, rows);
 
   const cw = new CitizenWalletCommunity(communitySlug);
   const balance = await cw.getBalance(profile.account);
@@ -46,10 +46,10 @@ export default async function Profile({
           <div>
             <div className="text-left">
               <div className="space-y-2">
-                {rows.map((classified) => (
-                  <ClassifiedRow
-                    key={classified.id}
-                    data={classified}
+                {rows.map((post) => (
+                  <PostRow
+                    key={post.id}
+                    data={post}
                     account={profile.account}
                   />
                 ))}

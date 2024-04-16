@@ -1,6 +1,7 @@
-import Post from "@/components/Post";
+import EditPost from "@/components/EditPost";
 import Link from "next/link";
 import TopNavigationBar from "@/components/TopNavigationBar";
+import { sql } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,10 @@ export default async function ViewPost({
   params: any;
   searchParams: any;
 }) {
+  const { rows } =
+    await sql`SELECT * from posts where "communitySlug"=${params.communitySlug} AND id=${params.postId}`;
+
+  console.log(">>> rows", rows);
   return (
     <main className="flex min-h-screen flex-col p-4">
       <TopNavigationBar
@@ -18,8 +23,8 @@ export default async function ViewPost({
         account={searchParams.account}
       />
       <div className="items-center">
-        <Post
-          id={params.postId}
+        <EditPost
+          data={rows[0]}
           communitySlug={params.communitySlug}
           account={searchParams.account}
         />

@@ -33,7 +33,7 @@ interface Tag {
   text: string;
 }
 
-export default function NewClassified({
+export default function NewPost({
   account,
   communitySlug,
 }: {
@@ -114,7 +114,7 @@ export default function NewClassified({
       authorAvatar: profile.image_small,
     };
     console.log(">>> insert", data);
-    const res = await fetch("/api/classifieds/new", {
+    const res = await fetch("/api/posts", {
       method: "POST",
       body: JSON.stringify(data),
     });

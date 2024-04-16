@@ -1,11 +1,13 @@
 import moment from "moment";
 
-import Link from "next/link";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import { sql } from "@/lib/db";
 import Profile from "./Profile";
+import Link from "next/link";
 import Contact from "./Contact";
-export default async function ClassifiedComponent({
+import Markdown from "react-markdown";
+
+export default async function PostComponent({
   communitySlug,
   id,
   account,
@@ -15,7 +17,7 @@ export default async function ClassifiedComponent({
   account: string;
 }) {
   const { rows } =
-    await sql`SELECT * from classifieds where "communitySlug"=${communitySlug} AND id=${id}`;
+    await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND id=${id}`;
 
   const data = rows[0];
 
@@ -55,7 +57,7 @@ export default async function ClassifiedComponent({
           </div>
         </div>
         <div className="prose dark:prose-dark mt-4">
-          <p>{data.text}</p>
+          <Markdown>{data.text}</Markdown>
           <Contact data={data} />
         </div>
       </div>
@@ -64,6 +66,14 @@ export default async function ClassifiedComponent({
         excludeId={data.id}
         communitySlug={communitySlug}
       />
+      {data.authorAccount === account && (
+        <Link
+          className="button mt-6"
+          href={`/${communitySlug}/${data.id}/edit?account=${account}`}
+        >
+          Edit post
+        </Link>
+      )}
     </>
   );
 }

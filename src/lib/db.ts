@@ -67,6 +67,8 @@ export async function sql<O extends QueryResultRow>(
   ...values: Primitive[]
 ) {
   const [query, params] = sqlTemplate(strings, ...values);
+  console.log(">>> query", query);
+  console.log(">>> params", params);
   return pool.query<O>(query, params);
 }
 
@@ -133,6 +135,7 @@ export const db: any = {
   },
   update: async function (table: string, data: any) {
     if (!data.id) throw new Error("data.id is required");
+    await dbconnect();
     const keys = [],
       values = [];
 
@@ -144,13 +147,13 @@ export const db: any = {
     }
 
     const text = `UPDATE ${table} SET ${keys
-      .map((key, i) => `"${key}"=%L`)
+      .map((key, i) => `"${key}"=$${i + 1}`)
       .join(", ")} WHERE id='${data.id}' RETURNING *`;
 
     const query = format(text, ...values);
-    // console.log(">>> update query", query, "values", values);
+    console.log(">>> update query", query, "values", values);
     try {
-      const res = await client.query(query);
+      const res = await client.query(query, values);
       return res;
     } catch (e) {
       console.log("!!! error", e);

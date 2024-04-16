@@ -10,6 +10,10 @@ const icons: IconMap = {
 };
 
 export default async function Profile({ data }: { data: any }) {
+  function className(service: string) {
+    if (["phone", "email"].includes(service)) return "dark:invert";
+    return "";
+  }
   function getLink(service: string, address: string) {
     switch (service) {
       case "whatsapp":
@@ -34,6 +38,7 @@ export default async function Profile({ data }: { data: any }) {
         <div className="flex flex-col text-center justify-center w-32 my-4">
           <center>
             <img
+              className={className(data.contactService)}
               src={icons[data.contactService]}
               width={64}
               height={64}

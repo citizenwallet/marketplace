@@ -141,12 +141,23 @@ export default class CitizenWalletCommunity {
   getTransactions = async (account: string) => {
     await this.loadConfig();
     const apiUrl = this.config.indexer.url;
-    const apiCall = `${apiUrl}/logs/transfers/${this.config.token.address}/${account}?limit=10`;
+    const apiCall = `${apiUrl}/logs/v2/transfers/${this.config.token.address}/${account}?limit=10`;
     const response = await fetch(apiCall, {
       headers: { Authorization: "Bearer x" },
     });
-    const data = await response.json();
-    return data.array;
+    try {
+      const data = await response.json();
+      return data.array;
+    } catch (e) {
+      console.error(
+        ">>> unable to getTransactions",
+        apiCall,
+        res.status,
+        response.statusText,
+        e
+      );
+      return [];
+    }
   };
 
   fetchFromIPFS = async (ipfsHash: string) => {
