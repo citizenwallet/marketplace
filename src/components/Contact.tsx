@@ -34,7 +34,10 @@ export default async function Profile({ data }: { data: any }) {
   return (
     <div className="my-4">
       <h3 className="text-2xl font-bold">Contact</h3>
-      <Link href={getLink(data.contactService, data.contactAddress)}>
+      <a
+        href={getLink(data.contactService, data.contactAddress)}
+        target="_blank"
+      >
         <div className="flex flex-col text-center justify-center w-32 my-4">
           <center>
             <img
@@ -47,7 +50,7 @@ export default async function Profile({ data }: { data: any }) {
           </center>
           <div className="text-sm">{data.contactAddress}</div>
         </div>
-      </Link>
+      </a>
     </div>
   );
 }

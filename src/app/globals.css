@@ -56,7 +56,11 @@ select {
 }
 */
 
-.button:active {
+.button:disabled {
+  @apply bg-gray-400 text-white;
+}
+
+.button:active:not(:disabled) {
   @apply bg-gray-900 scale-95;
 }
 

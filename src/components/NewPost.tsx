@@ -43,7 +43,7 @@ export default function NewPost({
   const router = useRouter();
   const [community] = useCommunity(communitySlug);
   const [profile] = useProfile(communitySlug, account);
-
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "OFFER",
     title: "",
@@ -91,6 +91,7 @@ export default function NewPost({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     console.log("submit, data", formData);
     if (!profile) {
       console.error("User profile missing");
@@ -121,6 +122,7 @@ export default function NewPost({
     const json = await res.json();
     console.log(">>> response", json);
     router.push(`/${communitySlug}?account=${profile.account}`);
+    setLoading(false);
     return false;
   };
 
@@ -248,7 +250,7 @@ export default function NewPost({
           {moment(formData.expiryDate).format("MMMM Do YYYY")}{" "}
         </p>
       </div>
-      <button type="submit" className="button w-full !py-6">
+      <button type="submit" className="button w-full !py-6" disabled={loading}>
         Submit
       </button>
     </form>
