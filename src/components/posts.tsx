@@ -23,8 +23,8 @@ export async function Posts({
     <div>
       <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">Market place</h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <h1 className="text-3xl font-bold">Marketplace</h1>
+          <p className="text-gray-500 dark:text-gray-400 w-9/12">
             Share what you are looking for or what you have to offer.
           </p>
         </div>

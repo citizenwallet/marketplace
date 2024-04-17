@@ -13,7 +13,7 @@ export default async function Home({
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4">
-      <div>
+      <div className="mt-4">
         <Posts
           communitySlug={params.communitySlug}
           account={searchParams.account}

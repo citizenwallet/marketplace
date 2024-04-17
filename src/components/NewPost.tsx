@@ -249,9 +249,9 @@ export default function NewPost({
           {moment(formData.expiryDate).format("MMMM Do YYYY")}{" "}
         </p>
       </div>
-      <Button type="submit" variant="default" className="button w-full">
+      <button type="submit" className="button w-full !py-6">
         Submit
-      </Button>
+      </button>
     </form>
   );
 }
