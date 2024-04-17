@@ -230,12 +230,19 @@ export default function NewPost({
             onChange={handleChange}
           />
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Your {labels[formData.contactService].toLowerCase()} will only be
-          visible to people in the community that have {community?.token.symbol}{" "}
-          tokens and will be removed definitely from our database when your post
-          expires.
-        </p>
+        <>
+          {formData.contactService === "whatsapp" && (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Write your number using the international format
+            </p>
+          )}
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Your {labels[formData.contactService].toLowerCase()} will only be
+            visible to people in the community that have{" "}
+            {community?.token.symbol} tokens. It will be removed from our
+            database when your post expires.
+          </p>
+        </>
       </div>
       <div className="space-y-2">
         <Label htmlFor="expiryDateSelector">Expiry date</Label>

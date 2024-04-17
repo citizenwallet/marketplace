@@ -12,7 +12,10 @@ export default function PostRow({
   account: string;
 }) {
   return (
-    <Link href={`/${data.communitySlug}/${data.id}?account=${account}`}>
+    <Link
+      href={`/${data.communitySlug}/${data.id}?account=${account}`}
+      prefetch
+    >
       <div className="my-2 p-4 pr-2 flex flex-row active:bg-gray-300 dark:active:bg-gray-600 rounded-lg">
         <div className="space-y-1 w-full">
           <h2 className="text-2xl font-bold">{data.title}</h2>

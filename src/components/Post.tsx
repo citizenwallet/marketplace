@@ -32,7 +32,7 @@ export default async function PostComponent({
 
   return (
     <>
-      <div className="my-8 p-4 mb-16">
+      <div className="my-8 p-2 mb-16">
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{data.title}</h2>
           <div className="flex items-center space-x-2">

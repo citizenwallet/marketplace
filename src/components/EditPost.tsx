@@ -120,7 +120,7 @@ export default function EditPost({
       expiryDate: formData.expiryDate,
       authorUsername: profile.username,
       authorAccount: profile.account,
-      authorAvatar: profile.image_small,
+      authorAvatar: profile.image_medium,
     };
     console.log(">>> update", updatedData);
     const res = await fetch("/api/posts", {
