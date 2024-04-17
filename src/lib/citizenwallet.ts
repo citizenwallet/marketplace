@@ -93,14 +93,18 @@ export default class CitizenWalletCommunity {
     await this.initClient();
     const contractAddress = this.config.profile.address;
 
-    const ipfsHash = await this.client.readContract({
-      address: contractAddress,
-      abi: ProfileABI,
-      functionName: "get",
-      args: [account],
-    });
-
-    return await this.fetchJSON(ipfsHash);
+    try {
+      const ipfsHash = await this.client.readContract({
+        address: contractAddress,
+        abi: ProfileABI,
+        functionName: "get",
+        args: [account],
+      });
+      return await this.fetchJSON(ipfsHash);
+    } catch (e) {
+      console.error("Error getting profile for", account, e);
+      return null;
+    }
   };
 
   getProfileFromUsername = async (username: string) => {

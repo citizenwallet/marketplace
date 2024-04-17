@@ -150,9 +150,8 @@ export default function NewPost({
           onChange={handleChange}
         />
       </div>
-      {!profile ? (
-        "loading..."
-      ) : (
+      {profile === undefined && "loading..."}
+      {profile && (
         <div className="flex items-center space-x-2 space-y-0">
           <div className="rounded-full overflow-hidden w-8 h-8">
             <img

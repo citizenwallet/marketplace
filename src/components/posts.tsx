@@ -17,26 +17,8 @@ export async function Posts({
   const { rows } =
     await sql`SELECT * from posts where "communitySlug"=${communitySlug} ORDER BY id DESC`;
 
-  console.log(">>> rows", communitySlug, rows);
-
   return (
     <div>
-      <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold">Marketplace</h1>
-          <p className="text-gray-500 dark:text-gray-400 w-9/12">
-            Share what you are looking for or what you have to offer.
-          </p>
-        </div>
-        <div className="space-y-6 mb-12">
-          <Link
-            href={`/${communitySlug}/new?account=${account}`}
-            className="button"
-          >
-            New Post
-          </Link>
-        </div>
-      </div>
       <div>
         <div className="pt-8">
           <div className="space-y-2">
