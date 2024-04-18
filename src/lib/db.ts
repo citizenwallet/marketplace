@@ -67,8 +67,8 @@ export async function sql<O extends QueryResultRow>(
   ...values: Primitive[]
 ) {
   const [query, params] = sqlTemplate(strings, ...values);
-  console.log(">>> query", query);
-  console.log(">>> params", params);
+  // console.log(">>> query", query);
+  // console.log(">>> params", params);
   return pool.query<O>(query, params);
 }
 

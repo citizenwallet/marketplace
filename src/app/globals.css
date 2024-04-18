@@ -64,6 +64,15 @@ select {
   @apply bg-gray-900 scale-95;
 }
 
+.tag {
+  /* @apply font-bold px-2 py-1 border-2 border-gray-300 rounded-lg mr-1 inline-block mb-1; */
+  @apply block px-3 py-1 rounded-full text-sm font-medium bg-gray-300 border-gray-400 border-2 text-gray-700;
+}
+
+.tag.selected {
+  @apply px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white border-blue-500;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -89,13 +98,4 @@ select {
   .tag.selected {
     @apply px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white;
   }
-}
-
-.tag {
-  /* @apply font-bold px-2 py-1 border-2 border-gray-300 rounded-lg mr-1 inline-block mb-1; */
-  @apply block px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-700;
-}
-
-.tag.selected {
-  @apply px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white;
 }
