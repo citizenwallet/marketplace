@@ -14,6 +14,7 @@ export default function PostRow({
   return (
     <Link
       href={`/${data.communitySlug}/${data.id}?account=${account}`}
+      className="PostRow"
       prefetch
     >
       <div className="my-2 p-4 pr-2 flex flex-row active:bg-gray-300 dark:active:bg-gray-600 rounded-lg">

@@ -12,7 +12,7 @@ export default async function ViewPost({
   searchParams: any;
 }) {
   return (
-    <main className="flex min-h-screen flex-col p-2 mt-4">
+    <main className="flex min-h-screen flex-col p-2 mt-6">
       <TopNavigationBar
         communitySlug={params.communitySlug}
         account={searchParams.account}
