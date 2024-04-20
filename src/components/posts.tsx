@@ -17,7 +17,7 @@ export default async function Posts({
   selectedTag: string;
 }) {
   const { rows } = selectedTag
-    ? await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND ${selectedTag}=ANY(tags) AND status='PUBLISHED' ORDER BY id DESC`
+    ? await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND LOWER(${selectedTag})=ANY(ARRAY(SELECT LOWER(unnest(tags)))) AND status='PUBLISHED' ORDER BY id DESC`
     : await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND status='PUBLISHED' ORDER BY id DESC`;
 
   return (
