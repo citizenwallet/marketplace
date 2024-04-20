@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 export async function POST(request: Request) {
   const data = await request.json();
   const res = await db.insert("posts", data);
+  await revalidatePath(`/${data.communitySlug}`);
   return Response.json(res);
 }
 

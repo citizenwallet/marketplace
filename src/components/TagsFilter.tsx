@@ -13,7 +13,7 @@ export default async function TagsFilter({
   selectedTag: string;
 }) {
   const { rows } = await sql`SELECT
-  t.tag,
+  DISTINCT t.tag,
   c.count
 FROM
   (
