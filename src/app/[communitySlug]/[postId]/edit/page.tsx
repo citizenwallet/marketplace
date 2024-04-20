@@ -18,7 +18,7 @@ export default async function ViewPost({
 
   console.log(">>> rows", rows);
   return (
-    <main className="flex min-h-screen flex-col p-4">
+    <main className="flex min-h-screen flex-col p-4 mb-4">
       <TopNavigationBar
         communitySlug={params.communitySlug}
         account={searchParams.account}

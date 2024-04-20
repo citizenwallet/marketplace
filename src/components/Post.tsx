@@ -6,6 +6,7 @@ import Profile from "./Profile";
 import Link from "next/link";
 import Contact from "./Contact";
 import Markdown from "react-markdown";
+import gfm from "remark-gfm";
 
 export default async function PostComponent({
   communitySlug,
@@ -56,8 +57,10 @@ export default async function PostComponent({
             </div>
           </div>
         </div>
-        <div className="prose dark:prose-dark mt-4">
-          <Markdown>{data.text}</Markdown>
+        <div className="prose dark:prose-dark mt-4 text">
+          <Markdown remarkPlugins={[gfm]}>
+            {data.text.replace(/\n/g, "  \n")}
+          </Markdown>
           <Contact data={data} />
         </div>
       </div>

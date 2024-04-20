@@ -30,6 +30,7 @@
     "react-markdown": "^9.0.1",
     "react-select": "^5.8.0",
     "react-tag-input": "^6.9.0",
+    "remark-gfm": "^4.0.0",
     "smartcontracts": "github:citizenwallet/smartcontracts#v0.0.97",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",

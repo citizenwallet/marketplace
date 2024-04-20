@@ -18,7 +18,7 @@ export default async function TagsFilter({
 FROM
   (
     SELECT
-      unnest(tags) AS tag
+      LOWER(unnest(tags)) AS tag
     FROM
       posts
     WHERE
@@ -27,19 +27,20 @@ FROM
 LEFT JOIN
   (
     SELECT
-      unnest(tags) AS tag,
+      LOWER(unnest(tags)) AS tag,
       COUNT(*) AS count
     FROM
       posts
     WHERE
       "communitySlug"=${communitySlug} AND status='PUBLISHED'
     GROUP BY
-      unnest(tags)
+      LOWER(unnest(tags))
   ) c
 ON
   t.tag = c.tag
 ORDER BY
-  c.count DESC;`;
+  c.count DESC
+LIMIT 10;`;
 
   console.log(">>> rows", rows);
   return (

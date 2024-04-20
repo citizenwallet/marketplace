@@ -3,12 +3,13 @@ import { WithContext as ReactTags } from "react-tag-input";
 import "@/styles/tagsInput.css";
 const KeyCodes = {
   comma: 188,
+  column: 186,
   enter: 13,
 };
 
 import { Tag } from "react-tag-input";
 
-const delimiters = [KeyCodes.comma, KeyCodes.enter];
+const delimiters = [KeyCodes.comma, KeyCodes.enter, KeyCodes.column];
 
 export default function TagInput({
   communitySlug,
