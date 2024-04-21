@@ -42,7 +42,6 @@ ORDER BY
   c.count DESC
 LIMIT 10;`;
 
-  console.log(">>> rows", rows);
   return (
     <div>
       <div className="flex flex-wrap gap-2 m-4">

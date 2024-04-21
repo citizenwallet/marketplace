@@ -16,7 +16,6 @@ export default async function ViewPost({
   const { rows }: { rows: Post[] } =
     await sql`SELECT * from posts where "communitySlug"=${params.communitySlug} AND id=${params.postId}`;
 
-  console.log(">>> rows", rows);
   return (
     <main className="flex min-h-screen flex-col p-4 mb-4">
       <TopNavigationBar

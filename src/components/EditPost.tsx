@@ -129,7 +129,7 @@ export default function EditPost({
     });
     const json = await res.json();
     console.log(">>> response", json);
-    router.push(`/${communitySlug}?account=${profile.account}`);
+    router.push(`/${communitySlug}/${formData.id}?account=${profile.account}`);
     setLoading(false);
     return false;
   };

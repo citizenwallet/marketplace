@@ -115,15 +115,20 @@ export default function NewPost({
       authorAvatar: profile.image_small,
     };
     console.log(">>> insert", data);
-    const res = await fetch("/api/posts", {
-      method: "POST",
-      body: JSON.stringify(data),
-    });
-    const json = await res.json();
-    console.log(">>> response", json);
-    router.push(`/${communitySlug}?account=${profile.account}`);
-    setLoading(false);
-    return false;
+    try {
+      const res = await fetch("/api/posts", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      console.log(">>> response", json);
+      router.push(`/${communitySlug}?account=${profile.account}`);
+      setLoading(false);
+      return false;
+    } catch (e) {
+      console.error("Submit new post error", e);
+      setLoading(false);
+    }
   };
 
   const labels: { [key: string]: string } = {
