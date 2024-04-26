@@ -12,7 +12,7 @@ export default function TopNavigationBar({
       href={`/${communitySlug}?account=${account}`}
       className="w-full text-black"
     >
-      <div className="flex flex-row text-left w-full mb-4 items-center">
+      <div className="flex flex-row text-left w-full mb-4 items-center dark:text-white">
         <div className="font-bold w-5">
           <svg
             width="15"

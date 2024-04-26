@@ -48,7 +48,7 @@ export default async function Profile({ data }: { data: any }) {
               alt={data.contactService}
             />
           </center>
-          <div className="text-sm">{data.contactAddress}</div>
+          <div className="text-sm dark:text-white ">{data.contactAddress}</div>
         </div>
       </a>
     </div>
