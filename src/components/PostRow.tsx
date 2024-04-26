@@ -19,7 +19,7 @@ export default function PostRow({
     >
       <div className="my-2 p-4 pr-2 flex flex-row active:bg-gray-700 dark:bg-gray-800  dark:active:bg-gray-600 rounded-lg">
         <div className="space-y-1 w-full">
-          <h2 className="text-2xl font-bold">{data.title}</h2>
+          <h2 className="text-xl font-bold">{data.title}</h2>
           <div className="flex items-center space-x-2">
             <div className="rounded-full overflow-hidden w-8 h-8">
               <img
