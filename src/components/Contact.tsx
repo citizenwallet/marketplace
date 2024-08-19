@@ -9,7 +9,13 @@ const icons: IconMap = {
   email: "/email.svg",
 };
 
-export default async function Profile({ data }: { data: any }) {
+type ContactData = {
+  contactService: string;
+  contactAddress: string;
+  title?: string; // title of the post to prefill the contact message
+};
+
+export default async function Profile({ data }: { data: ContactData }) {
   function className(service: string) {
     if (["phone", "email"].includes(service)) return "dark:invert";
     return "";
@@ -20,11 +26,13 @@ export default async function Profile({ data }: { data: any }) {
         return `https://wa.me/${data.contactAddress.replace(
           /^00|\+|\s|\./g,
           ""
-        )}?text=${encodeURIComponent(data.title)}`;
+        )}?text=${encodeURIComponent(data.title || "")}`;
       case "telegram":
         return `https://t.me/${data.contactAddress.replace(/@/, "")}`;
       case "email":
-        return `mailto:${address}?subject=${encodeURIComponent(data.title)}`;
+        return `mailto:${address}?subject=${encodeURIComponent(
+          data.title || ""
+        )}`;
       case "phone":
         return `tel:${address}`;
     }
@@ -33,12 +41,11 @@ export default async function Profile({ data }: { data: any }) {
 
   return (
     <div className="my-4">
-      <h3 className="text-2xl font-bold">Contact</h3>
       <a
         href={getLink(data.contactService, data.contactAddress)}
         target="_blank"
       >
-        <div className="flex flex-col text-center justify-center w-32 my-4">
+        <div className="flex flex-col text-center justify-center w-full my-4">
           <center>
             <img
               className={className(data.contactService)}

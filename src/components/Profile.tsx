@@ -4,6 +4,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 import CitizenWalletCommunity from "@/lib/citizenwallet";
 import { getUrlFromIPFS } from "@/lib/ipfs";
+import Contact from "./Contact";
 
 interface Profile {
   username: string;
@@ -15,19 +16,25 @@ interface Profile {
 export default async function Profile({
   communitySlug,
   profile,
-  excludeId,
+  postId,
 }: {
   communitySlug: string;
   profile: Profile;
-  excludeId?: number;
+  postId?: number;
 }) {
   const { rows } =
-    await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND "authorAccount"=${profile.account} AND id!=${excludeId} ORDER BY id DESC`;
-  console.log(">>> fetching posts account", profile.account, rows);
+    await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND "authorAccount"=${profile.account} ORDER BY id DESC`;
 
   const cw = new CitizenWalletCommunity(communitySlug);
   const balance = await cw.getBalance(profile.account);
   const transactions = await cw.getTransactions(profile.account);
+
+  const post = postId && rows.find((row) => row.id === postId);
+  const data = post && {
+    contactService: post.contactService,
+    contactAddress: post.contactAddress,
+    title: post.title,
+  };
 
   return (
     <div className="flex content-center flex-col justify-center text-center">
@@ -40,19 +47,24 @@ export default async function Profile({
       <div className="my-2">
         {balance} {cw.symbol} | {transactions.length} transactions
       </div>
+      {data && <Contact data={data} />}
+
       {rows.length > 0 && (
         <>
           <h3 className="pt-4 pl-4 text-left">Latest posts</h3>
           <div>
             <div className="text-left">
               <div className="space-y-2">
-                {rows.map((post) => (
-                  <PostRow
-                    key={post.id}
-                    data={post}
-                    account={profile.account}
-                  />
-                ))}
+                {rows.map(
+                  (post) =>
+                    post.id !== postId && (
+                      <PostRow
+                        key={post.id}
+                        data={post}
+                        account={profile.account}
+                      />
+                    )
+                )}
               </div>
               <div className="border-t border-gray-200 dark:border-gray-800" />
             </div>

@@ -4,7 +4,6 @@ import { getUrlFromIPFS } from "@/lib/ipfs";
 import { sql } from "@/lib/db";
 import Profile from "./Profile";
 import Link from "next/link";
-import Contact from "./Contact";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 
@@ -61,12 +60,11 @@ export default async function PostComponent({
           <Markdown remarkPlugins={[gfm]}>
             {data.text.replace(/\n/g, "  \n")}
           </Markdown>
-          <Contact data={data} />
         </div>
       </div>
       <Profile
         profile={profile}
-        excludeId={data.id}
+        postId={data.id}
         communitySlug={communitySlug}
       />
       {data.authorAccount === account && (
