@@ -20,7 +20,7 @@ export default async function Home({
   });
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-2">
+    <main className="flex min-h-screen flex-col items-center p-2 pt-16">
       <div className="mt-4">
         <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6 mb-8">
           <div className="space-y-2">
