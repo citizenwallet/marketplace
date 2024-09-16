@@ -18,7 +18,7 @@ export default function Home({
   if (!account || account === "undefined") return <AccountRequiredError />;
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 mb-4">
+    <main className="flex min-h-screen flex-col items-center p-4 pt-24 mb-4">
       <TopNavigationBar communitySlug={communitySlug} account={account} />
       <NewPost account={account} communitySlug={communitySlug} lang={lang} />
     </main>

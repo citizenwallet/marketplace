@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        hostname: "api.multiavatar.com",
+      },
+      {
+        hostname: "ipfs.internal.citizenwallet.xyz",
+      },
+    ],
+  },
   // webpack doesn't understand that .abi files are .json files
   // this helps webpack to understand that
   webpack: (config, { isServer }) => {
