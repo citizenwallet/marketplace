@@ -19,7 +19,7 @@ export default async function ViewPost({
     await sql`SELECT * from posts where "communitySlug"=${params.communitySlug} AND id=${params.postId}`;
 
   return (
-    <main className="flex min-h-screen flex-col p-4 pt-24 mb-4">
+    <main className="flex min-h-screen flex-col p-4 pt-28 mb-4">
       <TopNavigationBar
         communitySlug={params.communitySlug}
         account={searchParams.account}

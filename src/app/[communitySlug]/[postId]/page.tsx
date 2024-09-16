@@ -18,7 +18,7 @@ export default function PostPage({
   if (!account || account === "undefined") return <div>Account required</div>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 pt-24 mb-4">
+    <main className="flex min-h-screen flex-col items-center p-4 pt-28 mb-4">
       <TopNavigationBar communitySlug={communitySlug} account={account} />
       <PostComponent 
         communitySlug={communitySlug} 
