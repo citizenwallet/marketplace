@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
+import { useTranslation } from "react-i18next";
+import "../i18n";
 
 export default function NewPostButton({
   communitySlug,
@@ -10,6 +12,7 @@ export default function NewPostButton({
   account: string;
 }) {
   const [profile] = useProfile(communitySlug, account);
+  const { t } = useTranslation();
 
   if (profile) {
     return (
@@ -17,7 +20,7 @@ export default function NewPostButton({
         href={`/${communitySlug}/new?account=${account}`}
         className="button"
       >
-        New Post
+        {t("New Post")}
       </Link>
     );
   }
@@ -25,7 +28,7 @@ export default function NewPostButton({
   if (profile === undefined) {
     return (
       <div className="flex items-center justify-center h-14">
-        loading your profile...
+        {t("Loading your profile...")}
       </div>
     );
   }
@@ -33,10 +36,10 @@ export default function NewPostButton({
   return (
     <div>
       <Link href={"#"} className="button">
-        Create a Profile
+        {t("Create a Profile")}
       </Link>
       <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
-        Create a free profile to start posting
+        {t("Create a free profile to start posting")}
       </p>
     </div>
   );

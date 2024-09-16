@@ -13,6 +13,8 @@ import TagInput from "./TagInput";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
+import "../i18n";
 
 const setExpiryDate = (selector: string): Date => {
   const d = new Date();
@@ -36,9 +38,11 @@ interface Tag {
 export default function NewPost({
   account,
   communitySlug,
+  lang,
 }: {
   account: string;
   communitySlug: string;
+  lang: string;
 }) {
   const router = useRouter();
   const [community] = useCommunity(communitySlug);
@@ -131,33 +135,38 @@ export default function NewPost({
     }
   };
 
+  const { t, i18n } = useTranslation();
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+  }, [lang, i18n]);
+
   const labels: { [key: string]: string } = {
-    email: "Email address",
-    whatsapp: "WhatsApp number",
-    telegram: "Telegram username",
-    phone: "Phone number",
+    email: t("Email address"),
+    whatsapp: t("WhatsApp number"),
+    telegram: t("Telegram username"),
+    phone: t("Phone number"),
   };
 
   return (
     <form className="w-full max-w-96 space-y-6" onSubmit={handleSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="type">Type</Label>
+        <Label htmlFor="type">{t("Type")}</Label>
         <select id="type" onChange={handleChange}>
-          <option value="OFFER">Offer</option>
-          <option value="REQUEST">Request</option>
+          <option value="OFFER">{t("Offer")}</option>
+          <option value="REQUEST">{t("Request")}</option>
         </select>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">{t("Title")}</Label>
         <Input
           id="title"
-          placeholder="Enter the title"
+          placeholder={t("Enter the title")}
           required
           ref={firstInputRef}
           onChange={handleChange}
         />
       </div>
-      {profile === undefined && "loading..."}
+      {profile === undefined && t("Loading your profile...")}
       {profile && (
         <div className="flex items-center space-x-2 space-y-0">
           <div className="rounded-full overflow-hidden w-8 h-8">
@@ -174,96 +183,88 @@ export default function NewPost({
             />
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            Post by {profile.name} (@{profile.username})
+            {t("Post by")} {profile.name} (@{profile.username})
           </div>
         </div>
       )}
       <div className="space-y-2">
-        <Label htmlFor="text">Text</Label>
+        <Label htmlFor="text">{t("Text")}</Label>
         <Textarea
           id="text"
           rows={20}
-          placeholder="Enter the description"
+          placeholder={t("Enter the description")}
           required
           onChange={handleChange}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="tags">Tags</Label>
+        <Label htmlFor="tags">{t("Tags")}</Label>
         <TagInput communitySlug={communitySlug} onChange={handleTagsInput} />
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Tags help people find your {formData.type.toLowerCase()}
+          {t("Tags help people find your")} {t(formData.type.toLowerCase())}
         </p>
       </div>
       <div className="space-y-2">
-        <Label>Price</Label>
+        <Label>{t("Price")}</Label>
         <div className="flex items-center space-x-2">
           <Input
             type="number"
             step={0.01}
             className="mr-2"
             id="price"
-            placeholder="Price"
+            placeholder={t("Price")}
             onChange={handleChange}
           />
           {community?.token && community.token.symbol}
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Price for your {formData.type.toLowerCase()} (optional and always
-          negotiable, rule of thumb: 1 {community?.token.symbol} = 1 hour of
-          work)
+          {t("Price for your")} {t(formData.type.toLowerCase())} ({t("optional and always negotiable, rule of thumb: 1")} {community?.token.symbol} {t("= 1 hour of work")})
         </p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="contactService">Contact</Label>
+        <Label htmlFor="contactService">{t("Contact")}</Label>
         <div className="flex flex-row">
           <select
             className="w-32 mr-1"
             id="contactService"
             onChange={handleChange}
           >
-            <option value="email">Email</option>
-            <option value="whatsapp">WhatsApp</option>
-            <option value="telegram">Telegram</option>
-            <option value="phone">Phone</option>
+            <option value="email">{t("Email")}</option>
+            <option value="whatsapp">{t("WhatsApp")}</option>
+            <option value="telegram">{t("Telegram")}</option>
+            <option value="phone">{t("Phone")}</option>
           </select>
           <Input
             id="contactAddress"
-            placeholder={`Enter your ${labels[
-              formData.contactService
-            ].toLowerCase()}`}
+            placeholder={`${t("Enter your")} ${t(labels[formData.contactService].toLowerCase())}`}
             onChange={handleChange}
           />
         </div>
         <>
           {formData.contactService === "whatsapp" && (
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Write your number using the international format
+              {t("Write your number using the international format")}
             </p>
           )}
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Your {labels[formData.contactService].toLowerCase()} will only be
-            visible to people in the community that have{" "}
-            {community?.token.symbol} tokens. It will be removed from our
-            database when your post expires.
+            {t("Your")} {t(labels[formData.contactService].toLowerCase())} {t("will only be visible to people in the community that have")} {community?.token.symbol} {t("tokens. It will be removed from our database when your post expires.")}
           </p>
         </>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="expiryDateSelector">Expiry date</Label>
+        <Label htmlFor="expiryDateSelector">{t("Expiry date")}</Label>
         <select id="expiryDateSelector" onChange={handleChangeExpiryDate}>
-          <option value="week">one week</option>
-          <option value="month">one month</option>
-          <option value="season">one season</option>
-          <option value="year">one year</option>
+          <option value="week">{t("one week")}</option>
+          <option value="month">{t("one month")}</option>
+          <option value="season">{t("one season")}</option>
+          <option value="year">{t("one year")}</option>
         </select>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Your post will be removed on{" "}
-          {moment(formData.expiryDate).format("MMMM Do YYYY")}{" "}
+          {t("Your post will be removed on")} {moment(formData.expiryDate).format("MMMM Do YYYY")}
         </p>
       </div>
       <button type="submit" className="button w-full !py-6" disabled={loading}>
-        Submit
+        {t("Submit")}
       </button>
     </form>
   );

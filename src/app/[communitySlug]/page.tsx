@@ -1,8 +1,12 @@
+'use client'
+
 import AccountRequiredError from "@/components/AccountRequiredError";
 import NewPostButton from "@/components/NewPostButton";
 import dynamic from "next/dynamic";
+import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 
-export default async function Home({
+export default function Home({
   params,
   searchParams,
 }: {
@@ -10,13 +14,21 @@ export default async function Home({
   searchParams: any;
 }) {
   const account = searchParams.account;
+  const lang = searchParams.lang || 'en';
+
+    // Initialize i18n with the current language
+    const { t, i18n } = useTranslation();
+    useEffect(() => {
+      i18n.changeLanguage(lang);
+    }, [lang, i18n]);
+  
   if (!account || account === "undefined") return <AccountRequiredError />;
 
   const TagsFilter = dynamic(() => import("../../components/TagsFilter"), {
-    loading: () => <p>Loading tags...</p>,
+    loading: () => <p>{t('Loading tags...')}</p>,
   });
   const Posts = dynamic(() => import("../../components/posts"), {
-    loading: () => <p>Loading posts...</p>,
+    loading: () => <p>{t('Loading posts...')}</p>,
   });
 
   return (
@@ -24,9 +36,9 @@ export default async function Home({
       <div className="mt-4">
         <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6 mb-8">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold">Marketplace</h1>
+            <h1 className="text-3xl font-bold">{t('Marketplace')}</h1>
             <p className="text-gray-500 dark:text-gray-400 w-9/12">
-              Share what you are looking for or what you have to offer.
+              {t('MarketplaceDescription')}
             </p>
           </div>
           <div className="space-y-6 mb-8">

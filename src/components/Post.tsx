@@ -1,25 +1,24 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import moment from "moment";
-
 import { getUrlFromIPFS } from "@/lib/ipfs";
-import { sql } from "@/lib/db";
 import Profile from "./Profile";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 
-export default async function PostComponent({
+export default function PostComponent({
   communitySlug,
   id,
   account,
+  data
 }: {
   communitySlug: string;
   id: number;
   account: string;
+  data: any;
 }) {
-  const { rows } =
-    await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND id=${id}`;
-
-  const data = rows[0];
+  const { t } = useTranslation();
 
   if (!data) return null;
 
@@ -50,8 +49,8 @@ export default async function PostComponent({
               />
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {data.type.toLowerCase()}ed by {data.authorName} (@
-              {data.authorUsername}) | {moment(data.createdAt).fromNow()} |{" "}
+              {data.type.toLowerCase()}ed {t('Posted by')} {data.authorName} (@
+              {data.authorUsername}) | {moment(data.createdAt).fromNow()} {t('ago')} |{" "}
               {data.price / 10 ** 6} {data.currency}
             </div>
           </div>
@@ -72,7 +71,7 @@ export default async function PostComponent({
           className="button mt-6"
           href={`/${communitySlug}/${data.id}/edit?account=${account}`}
         >
-          Edit post
+          {t('Edit post')}
         </Link>
       )}
     </>
