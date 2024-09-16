@@ -6,20 +6,22 @@ import Profile from "./Profile";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
+import { sql } from "@/lib/db";
 
-export default function PostComponent({
+export default async function PostComponent({
   communitySlug,
   id,
   account,
-  data
 }: {
   communitySlug: string;
   id: number;
   account: string;
-  data: any;
 }) {
   const { t } = useTranslation();
+  const { rows } =
+  await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND id=${id}`;
 
+const data = rows[0];
   if (!data) return null;
 
   const profile = {
