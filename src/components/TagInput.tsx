@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { WithContext as ReactTags } from "react-tag-input";
+import { Translator } from "@/lib/i18n.client";
 import "@/styles/tagsInput.css";
 const KeyCodes = {
   comma: 188,
@@ -15,11 +16,14 @@ export default function TagInput({
   communitySlug,
   defaultValue,
   onChange,
+  lang,
 }: {
   communitySlug: string;
   defaultValue?: Tag[];
   onChange: Function | undefined;
+  lang: string;
 }) {
+  const t = Translator(lang);
   const suggestions: Tag[] = [].map((row: { id: number; slug: string }) => {
     return {
       id: row.id + "",
@@ -79,7 +83,7 @@ export default function TagInput({
         handleTagClick={handleTagClick}
         inputFieldPosition="bottom"
         inputProps={{ enterKeyHint: "enter" }}
-        placeholder="Add a new tag"
+        placeholder={t("Add a new tag")}
         autocomplete
       />
     </div>

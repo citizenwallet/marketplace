@@ -11,6 +11,9 @@ import TagInput from "./TagInput";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import moment from "moment";
+import 'moment/locale/fr'; 
+import 'moment/locale/en-gb';
+import { Translator } from "@/lib/i18n.client";
 
 const setExpiryDate = (selector: string): Date => {
   const d = new Date();
@@ -37,11 +40,15 @@ export default function EditPost({
   account,
   communitySlug,
   data,
+  lang,
 }: {
   account: string;
   communitySlug: string;
   data: Post;
+  lang: string;
 }) {
+  const t = Translator(lang);
+  moment.locale(lang);
   const router = useRouter();
   const [community] = useCommunity(communitySlug);
   const [profile] = useProfile(communitySlug, account);
@@ -135,45 +142,45 @@ export default function EditPost({
   };
 
   const labels: { [key: string]: string } = {
-    email: "Email address",
-    whatsapp: "WhatsApp number",
-    telegram: "Telegram username",
-    phone: "Phone number",
+    email: t("Email address"),
+    whatsapp: t("WhatsApp number"),
+    telegram: t("Telegram username"),
+    phone: t("Phone number"),
   };
 
   const contactServiceOptions = [
-    { value: "email", label: "Email" },
-    { value: "whatsapp", label: "WhatsApp" },
-    { value: "telegram", label: "Telegram" },
-    { value: "phone", label: "Phone" },
+    { value: "email", label: t("Email") },
+    { value: "whatsapp", label: t("WhatsApp") },
+    { value: "telegram", label: t("Telegram") },
+    { value: "phone", label: t("Phone") },
   ];
 
   return (
     <form className="w-full max-w-96 space-y-6" onSubmit={handleSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="type">Type</Label>
+        <Label htmlFor="type">{t("Type")}</Label>
         <select id="type" onChange={handleChange}>
           <option value="OFFER" selected={data.type === "OFFER"}>
-            Offer
+            {t("Offer")}
           </option>
           <option value="REQUEST" selected={data.type === "REQUEST"}>
-            Request
+            {t("Request")}
           </option>
         </select>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
+        <Label htmlFor="title">{t("Title")}</Label>
         <Input
           id="title"
           defaultValue={data.title}
-          placeholder="Enter the title"
+          placeholder={t("Enter the title")}
           required
           ref={firstInputRef}
           onChange={handleChange}
         />
       </div>
       {!profile ? (
-        "loading..."
+        t("Loading your profile...")
       ) : (
         <div className="flex items-center space-x-2 space-y-0">
           <div className="rounded-full overflow-hidden w-8 h-8">
@@ -190,34 +197,35 @@ export default function EditPost({
             />
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            Post by {profile.name} (@{profile.username})
+            {t("Post by")} {profile.name} (@{profile.username})
           </div>
         </div>
       )}
       <div className="space-y-2">
-        <Label htmlFor="text">Text</Label>
+        <Label htmlFor="text">{t("Text")}</Label>
         <Textarea
           id="text"
           rows={20}
-          placeholder="Enter the description"
+          placeholder={t("Enter the description")}
           required
           defaultValue={data.text}
           onChange={handleChange}
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="tags">Tags</Label>
+        <Label htmlFor="tags">{t("Tags")}</Label>
         <TagInput
           communitySlug={communitySlug}
           onChange={handleTagsInput}
           defaultValue={data.tags?.map((t: string) => ({ id: t, text: t }))}
+          lang={lang}
         />
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Tags help people find your {formData.type.toLowerCase()}
+        <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
+          {t("Tags help people find your")} {formData.type === "OFFER" ? t("Offer") : t("Request")}
         </p>
       </div>
       <div className="space-y-2">
-        <Label>Price</Label>
+        <Label>{t("Price")}</Label>
         <div className="flex items-center space-x-2">
           <Input
             type="number"
@@ -227,19 +235,17 @@ export default function EditPost({
             defaultValue={
               data.displayPrice || (data.price && data.price / 10 ** 6)
             }
-            placeholder="Price"
+            placeholder={t("Price")}
             onChange={handleChange}
           />
           {community?.token && community.token.symbol}
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Price for your {formData.type.toLowerCase()} (optional and always
-          negotiable, rule of thumb: 1 {community?.token.symbol} = 1 hour of
-          work)
+        <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
+          {t("Price for your")} {formData.type === "OFFER" ? t("Offer") : t("Request")} ({t("optional and always negotiable, rule of thumb: 1")} {community?.token.symbol} {t("= 1 hour of work")})
         </p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="contactService">Contact</Label>
+        <Label htmlFor="contactService">{t("Contact")}</Label>
         <div className="flex flex-row">
           <select
             className="w-32 mr-1"
@@ -247,58 +253,53 @@ export default function EditPost({
             onChange={handleChange}
           >
             <option value="email" selected={data.contactService === "email"}>
-              Email
+              {t("Email")}
             </option>
             <option
               value="whatsapp"
               selected={data.contactService === "whatsapp"}
             >
-              WhatsApp
+              {t("WhatsApp")}
             </option>
             <option
               value="telegram"
               selected={data.contactService === "telegram"}
             >
-              Telegram
+              {t("Telegram")}
             </option>
             <option value="phone" selected={data.contactService === "phone"}>
-              Phone
+              {t("Phone")}
             </option>
           </select>
           <Input
             id="contactAddress"
             defaultValue={data.contactAddress}
-            placeholder={`Enter your ${labels[
-              formData.contactService
-            ].toLowerCase()}`}
+            placeholder={t("Enter your") + " " + labels[formData.contactService].toLowerCase()}
             onChange={handleChange}
           />
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Your {labels[formData.contactService].toLowerCase()} will only be
-          visible to people in the community that have {community?.token.symbol}{" "}
-          tokens and will be removed definitely from our database when your post
-          expires.
+          {t("Your")} {labels[formData.contactService]} {t("will only be visible to people in the community that have")} {community?.token.symbol} {t("tokens. It will be removed from our database when your post expires.")}
         </p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="expiryDateSelector">Expiry date</Label>
+        <Label htmlFor="expiryDateSelector">{t("Expiry date")}</Label>
         <select id="expiryDateSelector" onChange={handleChangeExpiryDate}>
           <option value={data.expiryDate.toString()}>
             {moment(formData.expiryDate).format("MMMM Do YYYY")}
           </option>
-          <option value="week">one week</option>
-          <option value="month">one month</option>
-          <option value="season">one season</option>
-          <option value="year">one year</option>
+          <option value="week">{t("one week")}</option>
+          <option value="month">{t("one month")}</option>
+          <option value="season">{t("one season")}</option>
+          <option value="year">{t("one year")}</option>
         </select>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Your post will be removed on{" "}
+          {t("Your post will be removed on")}{" "}
           {moment(formData.expiryDate).format("MMMM Do YYYY")}{" "}
         </p>
       </div>
       <button type="submit" className="button w-full !py-6" disabled={loading}>
-        Save
+        {t("Submit")}
       </button>
     </form>
   );

@@ -1,19 +1,20 @@
 "use client";
 import Link from "next/link";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
-import { useTranslation } from "react-i18next";
-import "../i18n";
+
+import { Translator } from "@/lib/i18n.client";
 
 export default function NewPostButton({
   communitySlug,
   account,
+  lang,
 }: {
   communitySlug: string;
   account: string;
+  lang: any;
 }) {
   const [profile] = useProfile(communitySlug, account);
-  const { t } = useTranslation();
-
+  const t = Translator(lang);
   if (profile) {
     return (
       <Link

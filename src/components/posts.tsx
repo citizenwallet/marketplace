@@ -4,17 +4,18 @@
  */
 import { sql } from "@/lib/db";
 import PostRow from "./PostRow";
-import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function Posts({
   communitySlug,
   account,
   selectedTag,
+  lang,
 }: {
   communitySlug: string;
   account: string;
   selectedTag: string;
+  lang: string;
 }) {
   const { rows } = selectedTag
     ? await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND LOWER(${selectedTag})=ANY(ARRAY(SELECT LOWER(unnest(tags)))) AND status='PUBLISHED' ORDER BY id DESC`
@@ -24,7 +25,7 @@ export default async function Posts({
     <div>
       <div className="space-y-2">
         {rows.map((post) => (
-          <PostRow key={post.id} data={post} account={account} />
+          <PostRow key={post.id} data={post} account={account} lang={lang} />
         ))}
       </div>
       <div className="border-t border-gray-200 dark:border-gray-800" />

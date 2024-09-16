@@ -3,7 +3,7 @@ import Link from "next/link";
 import TopNavigationBar from "@/components/TopNavigationBar";
 import { sql } from "@/lib/db";
 import type { Post } from "@/types";
-
+import { getLanguage } from "@/lib/i18n";
 export const dynamic = "force-dynamic";
 
 export default async function ViewPost({
@@ -13,6 +13,8 @@ export default async function ViewPost({
   params: any;
   searchParams: any;
 }) {
+  const lang = getLanguage(searchParams.lang);
+
   const { rows }: { rows: Post[] } =
     await sql`SELECT * from posts where "communitySlug"=${params.communitySlug} AND id=${params.postId}`;
 
@@ -27,6 +29,7 @@ export default async function ViewPost({
           data={rows[0] as Post}
           communitySlug={params.communitySlug}
           account={searchParams.account}
+          lang={lang}
         />
       </div>
     </main>

@@ -1,29 +1,31 @@
-import Post from "@/components/Post";
-import Link from "next/link";
-import TopNavigationBar from "@/components/TopNavigationBar";
+import React from 'react';
+import PostComponent from '@/components/Post';
+import TopNavigationBar from '@/components/TopNavigationBar';
+import { getLanguage } from '@/lib/i18n';
 
-export const dynamic = "force-dynamic";
-
-export default async function ViewPost({
+export default function PostPage({
   params,
   searchParams,
 }: {
-  params: any;
-  searchParams: any;
+  params: { communitySlug: string; postId: string };
+  searchParams: { account: string, lang: string };
 }) {
+  const { communitySlug, postId } = params;
+  const { account } = searchParams;
+  const lang = getLanguage(searchParams.lang);
+
+  if (!communitySlug || !postId) return null;
+  if (!account || account === "undefined") return <div>Account required</div>;
+
   return (
-    <main className="flex min-h-screen flex-col p-2 mt-6">
-      <TopNavigationBar
-        communitySlug={params.communitySlug}
-        account={searchParams.account}
+    <main className="flex min-h-screen flex-col items-center p-4 mb-4">
+      <TopNavigationBar communitySlug={communitySlug} account={account} />
+      <PostComponent 
+        communitySlug={communitySlug} 
+        id={parseInt(postId)} 
+        account={account} 
+        lang={lang}
       />
-      <div className="items-center">
-        <Post
-          id={params.postId}
-          communitySlug={params.communitySlug}
-          account={searchParams.account}
-        />
-      </div>
     </main>
   );
 }

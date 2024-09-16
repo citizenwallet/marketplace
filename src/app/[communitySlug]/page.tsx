@@ -1,35 +1,27 @@
-'use client'
-
+import { Translator, getLanguage } from '@/lib/i18n';
 import AccountRequiredError from "@/components/AccountRequiredError";
 import NewPostButton from "@/components/NewPostButton";
-import dynamic from "next/dynamic";
-import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
+import TagsFilter from "@/components/TagsFilter";
+import Posts from "@/components/posts";
+import { getTags, getPosts } from "@/lib/db.queries";
 
-export default function Home({
+export default async function Home({
   params,
   searchParams,
 }: {
   params: any;
   searchParams: any;
 }) {
+  const lang = getLanguage(searchParams.lang);
+  const t = Translator(lang);
   const account = searchParams.account;
-  const lang = searchParams.lang || 'en';
+  const selectedTag = searchParams.tag;
 
-    // Initialize i18n with the current language
-    const { t, i18n } = useTranslation();
-    useEffect(() => {
-      i18n.changeLanguage(lang);
-    }, [lang, i18n]);
-  
   if (!account || account === "undefined") return <AccountRequiredError />;
 
-  const TagsFilter = dynamic(() => import("../../components/TagsFilter"), {
-    loading: () => <p>{t('Loading tags...')}</p>,
-  });
-  const Posts = dynamic(() => import("../../components/posts"), {
-    loading: () => <p>{t('Loading posts...')}</p>,
-  });
+  // Fetch tags and posts server-side
+  const tags = await getTags(params.communitySlug);
+  // const posts = await getPosts(params.communitySlug, account, selectedTag);
 
   return (
     <main className="flex min-h-screen flex-col items-center p-2">
@@ -45,18 +37,21 @@ export default function Home({
             <NewPostButton
               account={account}
               communitySlug={params.communitySlug}
+              lang={lang}
             />
           </div>
         </div>
         <TagsFilter
           communitySlug={params.communitySlug}
-          account={searchParams.account}
-          selectedTag={searchParams.tag}
+          account={account}
+          selectedTag={selectedTag}
+          tags={tags}
         />
         <Posts
           communitySlug={params.communitySlug}
-          account={searchParams.account}
-          selectedTag={searchParams.tag}
+          account={account}
+          selectedTag={selectedTag}
+          lang={lang}
         />
       </div>
     </main>

@@ -3,18 +3,15 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Author } from "@/types";
-import { ChangeEventHandler, useEffect, useState, useRef } from "react";
-import { db } from "@/lib/db";
+import {  useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import TagInput from "./TagInput";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import moment from "moment";
-import { useTranslation } from "react-i18next";
-import "../i18n";
+import 'moment/locale/fr'; 
+import 'moment/locale/en-gb';
+import { Translator } from "@/lib/i18n.client";
 
 const setExpiryDate = (selector: string): Date => {
   const d = new Date();
@@ -44,6 +41,8 @@ export default function NewPost({
   communitySlug: string;
   lang: string;
 }) {
+  const t = Translator(lang);
+  moment.locale(lang);
   const router = useRouter();
   const [community] = useCommunity(communitySlug);
   const [profile] = useProfile(communitySlug, account);
@@ -135,11 +134,6 @@ export default function NewPost({
     }
   };
 
-  const { t, i18n } = useTranslation();
-  useEffect(() => {
-    i18n.changeLanguage(lang);
-  }, [lang, i18n]);
-
   const labels: { [key: string]: string } = {
     email: t("Email address"),
     whatsapp: t("WhatsApp number"),
@@ -199,9 +193,9 @@ export default function NewPost({
       </div>
       <div className="space-y-2">
         <Label htmlFor="tags">{t("Tags")}</Label>
-        <TagInput communitySlug={communitySlug} onChange={handleTagsInput} />
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("Tags help people find your")} {t(formData.type.toLowerCase())}
+        <TagInput communitySlug={communitySlug} onChange={handleTagsInput} lang={lang} />
+        <p className="text-sm text-gray-500 dark:text-gray-400 lowercase first-letter:uppercase">
+          {t("Tags help people find your")} {formData.type === "OFFER" ? t("Offer") : t("Request")}
         </p>
       </div>
       <div className="space-y-2">
@@ -217,8 +211,8 @@ export default function NewPost({
           />
           {community?.token && community.token.symbol}
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("Price for your")} {t(formData.type.toLowerCase())} ({t("optional and always negotiable, rule of thumb: 1")} {community?.token.symbol} {t("= 1 hour of work")})
+        <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
+          {t("Price for your")} {formData.type === "OFFER" ? t("Offer") : t("Request")} ({t("optional and always negotiable, rule of thumb: 1")} {community?.token.symbol} {t("= 1 hour of work")})
         </p>
       </div>
       <div className="space-y-2">
@@ -236,7 +230,7 @@ export default function NewPost({
           </select>
           <Input
             id="contactAddress"
-            placeholder={`${t("Enter your")} ${t(labels[formData.contactService].toLowerCase())}`}
+            placeholder={`${t("Enter your")} ${labels[formData.contactService]}`}
             onChange={handleChange}
           />
         </div>
@@ -247,7 +241,7 @@ export default function NewPost({
             </p>
           )}
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {t("Your")} {t(labels[formData.contactService].toLowerCase())} {t("will only be visible to people in the community that have")} {community?.token.symbol} {t("tokens. It will be removed from our database when your post expires.")}
+            {t("Your")} {labels[formData.contactService]} {t("will only be visible to people in the community that have")} {community?.token.symbol} {t("tokens. It will be removed from our database when your post expires.")}
           </p>
         </>
       </div>

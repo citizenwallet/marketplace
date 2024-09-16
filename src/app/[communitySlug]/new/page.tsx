@@ -1,7 +1,7 @@
 import NewPost from "@/components/NewPost";
 import AccountRequiredError from "@/components/AccountRequiredError";
 import TopNavigationBar from "@/components/TopNavigationBar";
-import { headers } from 'next/headers';
+import { getLanguage } from '@/lib/i18n';
 
 export default function Home({
   params,
@@ -12,7 +12,7 @@ export default function Home({
 }) {
   const communitySlug = params.communitySlug;
   const account = searchParams.account;
-  const lang = searchParams.lang || getLanguage();
+  const lang = getLanguage(searchParams.lang);
   
   if (!communitySlug) return null;
   if (!account || account === "undefined") return <AccountRequiredError />;
@@ -25,13 +25,4 @@ export default function Home({
   );
 }
 
-function getLanguage() {
-  const headersList = headers();
-  const acceptLanguage = headersList.get('accept-language');
-  if (acceptLanguage) {
-    const [browserLang] = acceptLanguage.split(',');
-    const [langCode] = browserLang.split('-');
-    return ['en', 'fr'].includes(langCode) ? langCode : 'en';
-  }
-  return 'en';
-}
+

@@ -17,10 +17,12 @@ export default async function Profile({
   communitySlug,
   profile,
   postId,
+  lang,
 }: {
   communitySlug: string;
   profile: Profile;
   postId?: number;
+  lang: string;
 }) {
   const { rows } =
     await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND "authorAccount"=${profile.account} ORDER BY id DESC`;
@@ -62,6 +64,7 @@ export default async function Profile({
                         key={post.id}
                         data={post}
                         account={profile.account}
+                        lang={lang}
                       />
                     )
                 )}
