@@ -1,4 +1,4 @@
-import { Translator, getLanguage } from '@/lib/i18n';
+import { Translator, getLanguage } from "@/lib/i18n";
 import AccountRequiredError from "@/components/AccountRequiredError";
 import NewPostButton from "@/components/NewPostButton";
 import TagsFilter from "@/components/TagsFilter";
@@ -24,13 +24,13 @@ export default async function Home({
   // const posts = await getPosts(params.communitySlug, account, selectedTag);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-2 pt-32">
+    <main className="flex min-h-screen flex-col items-center p-2">
       <div className="mt-4">
         <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6 mb-8">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold">{t('Marketplace')}</h1>
+            <h1 className="text-3xl font-bold">{t("Marketplace")}</h1>
             <p className="text-gray-500 dark:text-gray-400 w-9/12">
-              {t('MarketplaceDescription')}
+              {t("MarketplaceDescription")}
             </p>
           </div>
           <div className="space-y-6 mb-8">
