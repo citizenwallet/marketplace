@@ -3,15 +3,17 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {  useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import TagInput from "./TagInput";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import moment from "moment";
-import 'moment/locale/fr'; 
-import 'moment/locale/en-gb';
+import "moment/locale/fr";
+import "moment/locale/en-gb";
 import { Translator } from "@/lib/i18n.client";
+import { InsertPostData } from "@/db/posts";
+import { insertPostAction } from "@/app/[communitySlug]/new/actions";
 
 const setExpiryDate = (selector: string): Date => {
   const d = new Date();
@@ -51,7 +53,7 @@ export default function NewPost({
     type: "OFFER",
     title: "",
     text: "",
-    tags: "",
+    tags: [],
     price: "",
     expiryDateSelector: "week",
     expiryDate: setExpiryDate("week"),
@@ -100,7 +102,8 @@ export default function NewPost({
       console.error("User profile missing");
       return false;
     }
-    const data = {
+
+    const data: InsertPostData = {
       communitySlug,
       status: "PUBLISHED",
       type: formData.type,
@@ -119,12 +122,7 @@ export default function NewPost({
     };
     console.log(">>> insert", data);
     try {
-      const res = await fetch("/api/posts", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
-      const json = await res.json();
-      console.log(">>> response", json);
+      await insertPostAction(data);
       router.push(`/${communitySlug}?account=${profile.account}`);
       setLoading(false);
       return false;
@@ -193,9 +191,14 @@ export default function NewPost({
       </div>
       <div className="space-y-2">
         <Label htmlFor="tags">{t("Tags")}</Label>
-        <TagInput communitySlug={communitySlug} onChange={handleTagsInput} lang={lang} />
+        <TagInput
+          communitySlug={communitySlug}
+          onChange={handleTagsInput}
+          lang={lang}
+        />
         <p className="text-sm text-gray-500 dark:text-gray-400 lowercase first-letter:uppercase">
-          {t("Tags help people find your")} {formData.type === "OFFER" ? t("Offer") : t("Request")}
+          {t("Tags help people find your")}{" "}
+          {formData.type === "OFFER" ? t("Offer") : t("Request")}
         </p>
       </div>
       <div className="space-y-2">
@@ -212,7 +215,10 @@ export default function NewPost({
           {community?.token && community.token.symbol}
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
-          {t("Price for your")} {formData.type === "OFFER" ? t("Offer") : t("Request")} ({t("optional and always negotiable, rule of thumb: 1")} {community?.token.symbol} {t("= 1 hour of work")})
+          {t("Price for your")}{" "}
+          {formData.type === "OFFER" ? t("Offer") : t("Request")} (
+          {t("optional and always negotiable, rule of thumb: 1")}{" "}
+          {community?.token.symbol} {t("= 1 hour of work")})
         </p>
       </div>
       <div className="space-y-2">
@@ -230,7 +236,9 @@ export default function NewPost({
           </select>
           <Input
             id="contactAddress"
-            placeholder={`${t("Enter your")} ${labels[formData.contactService]}`}
+            placeholder={`${t("Enter your")} ${
+              labels[formData.contactService]
+            }`}
             onChange={handleChange}
           />
         </div>
@@ -241,7 +249,12 @@ export default function NewPost({
             </p>
           )}
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {t("Your")} {labels[formData.contactService]} {t("will only be visible to people in the community that have")} {community?.token.symbol} {t("tokens. It will be removed from our database when your post expires.")}
+            {t("Your")} {labels[formData.contactService]}{" "}
+            {t("will only be visible to people in the community that have")}{" "}
+            {community?.token.symbol}{" "}
+            {t(
+              "tokens. It will be removed from our database when your post expires."
+            )}
           </p>
         </>
       </div>
@@ -254,7 +267,8 @@ export default function NewPost({
           <option value="year">{t("one year")}</option>
         </select>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("Your post will be removed on")} {moment(formData.expiryDate).format("MMMM Do YYYY")}
+          {t("Your post will be removed on")}{" "}
+          {moment(formData.expiryDate).format("MMMM Do YYYY")}
         </p>
       </div>
       <button type="submit" className="button w-full !py-6" disabled={loading}>

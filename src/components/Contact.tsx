@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 type IconMap = Record<string, string>;
 
 const icons: IconMap = {
@@ -10,9 +8,9 @@ const icons: IconMap = {
 };
 
 type ContactData = {
-  contactService: string;
-  contactAddress: string;
-  title?: string; // title of the post to prefill the contact message
+  contactService: string | null;
+  contactAddress: string | null;
+  title: string | null; // title of the post to prefill the contact message
 };
 
 export default async function Profile({ data }: { data: ContactData }) {
@@ -23,12 +21,12 @@ export default async function Profile({ data }: { data: ContactData }) {
   function getLink(service: string, address: string) {
     switch (service) {
       case "whatsapp":
-        return `https://wa.me/${data.contactAddress.replace(
+        return `https://wa.me/${data.contactAddress?.replace(
           /^00|\+|\s|\./g,
           ""
         )}?text=${encodeURIComponent(data.title || "")}`;
       case "telegram":
-        return `https://t.me/${data.contactAddress.replace(/@/, "")}`;
+        return `https://t.me/${data.contactAddress?.replace(/@/, "")}`;
       case "email":
         return `mailto:${address}?subject=${encodeURIComponent(
           data.title || ""
@@ -42,17 +40,17 @@ export default async function Profile({ data }: { data: ContactData }) {
   return (
     <div className="my-4">
       <a
-        href={getLink(data.contactService, data.contactAddress)}
+        href={getLink(data.contactService ?? "", data.contactAddress ?? "")}
         target="_blank"
       >
         <div className="flex flex-col text-center justify-center w-full my-4">
           <center>
             <img
-              className={className(data.contactService)}
-              src={icons[data.contactService]}
+              className={className(data.contactService ?? "")}
+              src={icons[data.contactService ?? ""]}
               width={64}
               height={64}
-              alt={data.contactService}
+              alt={data.contactService ?? ""}
             />
           </center>
           <div className="text-sm dark:text-white ">{data.contactAddress}</div>

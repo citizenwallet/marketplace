@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 import moment from "moment";
-import 'moment/locale/fr'; 
-import 'moment/locale/en-gb';
+import "moment/locale/fr";
+import "moment/locale/en-gb";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import Profile from "./Profile";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import { sql } from "@/lib/db";
 import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
 import { QueryResultRow } from "@vercel/postgres";
+import { getPostBySlugAndId } from "@/db/posts";
 
 export default async function PostComponent({
   communitySlug,
@@ -23,52 +24,58 @@ export default async function PostComponent({
   account: string;
   lang: string;
 }) {
-  const { rows } =
-    await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND id=${id}`;
+  const post = await getPostBySlugAndId(communitySlug, id);
 
-  const data = rows[0];
-  if (!data) return null;
+  if (!post) return null;
 
   const profile = {
-    username: data.authorUsername,
-    name: data.authorName,
-    account: data.authorAccount,
-    avatar: data.authorAvatar,
+    username: post.authorUsername,
+    name: post.authorName,
+    account: post.authorAccount,
+    avatar: post.authorAvatar,
   };
 
   // Use a client-side component for translation
   return (
-    <PostContent 
-      data={data} 
-      profile={profile} 
-      communitySlug={communitySlug} 
+    <PostContent
+      data={post}
+      profile={profile}
+      communitySlug={communitySlug}
       account={account}
       lang={lang}
     />
   );
 }
 
-type PostData = QueryResultRow | {
-  title: string;
-  authorAvatar: string;
-  authorName: string;
-  authorUsername: string;
-  createdAt: string;
-  price: number;
-  currency: string;
-  text: string;
-  id: number;
-  authorAccount: string;
-};
+type PostData =
+  | QueryResultRow
+  | {
+      title: string;
+      authorAvatar: string;
+      authorName: string;
+      authorUsername: string;
+      createdAt: string;
+      price: number;
+      currency: string;
+      text: string;
+      id: number;
+      authorAccount: string;
+    };
 
 type ProfileData = {
-  username: string;
-  name: string;
-  account: string;
-  avatar: string;
+  username: string | null;
+  name: string | null;
+  account: string | null;
+  avatar: string | null;
 };
 
-const PostContent = ({ data, profile, communitySlug, account, lang }: {
+const PostContent = ({
+  data,
+  profile,
+  communitySlug,
+  account,
+  lang,
+}: {
   data: PostData;
   profile: ProfileData;
   communitySlug: string;
@@ -98,7 +105,7 @@ const PostContent = ({ data, profile, communitySlug, account, lang }: {
               />
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {t('Posted by')} {data.authorName} (@
+              {t("Posted by")} {data.authorName} (@
               {data.authorUsername}) | {moment(data.createdAt).fromNow()} |{" "}
               {data.price / 10 ** 6} {data.currency}
             </div>
@@ -121,7 +128,7 @@ const PostContent = ({ data, profile, communitySlug, account, lang }: {
           className="button mt-6"
           href={`/${communitySlug}/${data.id}/edit?account=${account}`}
         >
-          {t('Edit post')}
+          {t("Edit post")}
         </Link>
       )}
     </>

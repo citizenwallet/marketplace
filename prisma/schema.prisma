@@ -1,0 +1,64 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model posts {
+  id             Int          @id @default(autoincrement())
+  communitySlug  String?
+  /// REQUEST, OFFER
+  type           String?
+  /// address of the account of the author (smart contract wallet address)
+  authorAccount  String?
+  authorName     String?
+  authorUsername String?
+  authorAvatar   String?
+  createdAt      DateTime?    @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime?    @default(now()) @db.Timestamptz(6)
+  expiryDate     DateTime?    @default(now()) @db.Timestamptz(6)
+  title          String?
+  text           String?
+  tags           String[]
+  /// in the number of decimals of the token used by the community (typically 6, e.g. 18.50 is 18500000
+  price          Int?
+  /// the symbol of the token used by the community
+  currency       String?
+  /// EMAIL, TELEGRAM, WHATSAPP, X
+  contactService String?
+  /// email address, username or phone number
+  contactAddress String?
+  /// DRAFT, PUBLISHED, EXPIRED, DELETED
+  status         String?
+  tags_posts     tags_posts[]
+
+  @@index([communitySlug, authorAccount])
+  @@index([communitySlug])
+}
+
+model tags {
+  id            Int          @id @default(autoincrement())
+  communitySlug String?
+  slug          String?
+  label         String?
+  tags_posts    tags_posts[]
+
+  @@unique([communitySlug, slug], map: "tags_communitySlug_slug_idx")
+  @@index([communitySlug])
+}
+
+model tags_posts {
+  id      Int    @id @default(autoincrement())
+  tag_id  Int?
+  post_id Int?
+  posts   posts? @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tags    tags?  @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([post_id])
+}

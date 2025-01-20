@@ -3,14 +3,14 @@ import AccountRequiredError from "@/components/AccountRequiredError";
 import NewPostButton from "@/components/NewPostButton";
 import TagsFilter from "@/components/TagsFilter";
 import Posts from "@/components/posts";
-import { getTags, getPosts } from "@/lib/db.queries";
+import { getTags } from "@/db/tags";
 
 export default async function Home({
   params,
   searchParams,
 }: {
-  params: any;
-  searchParams: any;
+  params: { communitySlug: string };
+  searchParams: { lang: string; account: string; tag: string };
 }) {
   const lang = getLanguage(searchParams.lang);
   const t = Translator(lang);
@@ -21,6 +21,7 @@ export default async function Home({
 
   // Fetch tags and posts server-side
   const tags = await getTags(params.communitySlug);
+  console.log(">>> tags", tags);
   // const posts = await getPosts(params.communitySlug, account, selectedTag);
 
   return (

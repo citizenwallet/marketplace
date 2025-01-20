@@ -1,16 +1,15 @@
-import { sql } from "@/lib/db";
 import PostRow from "./PostRow";
-import Link from "next/link";
 export const dynamic = "force-dynamic";
 import CitizenWalletCommunity from "@/lib/citizenwallet";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import Contact from "./Contact";
+import { getPostsByAuthor } from "@/db/posts";
 
 interface Profile {
-  username: string;
-  name: string;
-  account: string;
-  avatar: string;
+  username: string | null;
+  name: string | null;
+  account: string | null;
+  avatar: string | null;
 }
 
 export default async function Profile({
@@ -24,14 +23,13 @@ export default async function Profile({
   postId?: number;
   lang: string;
 }) {
-  const { rows } =
-    await sql`SELECT * from posts where "communitySlug"=${communitySlug} AND "authorAccount"=${profile.account} ORDER BY id DESC`;
+  const posts = await getPostsByAuthor(communitySlug, profile.account ?? "");
 
   const cw = new CitizenWalletCommunity(communitySlug);
-  const balance = await cw.getBalance(profile.account);
-  const transactions = await cw.getTransactions(profile.account);
+  const balance = await cw.getBalance(profile.account ?? "");
+  const transactions = await cw.getTransactions(profile.account ?? "");
 
-  const post = postId && rows.find((row) => row.id === postId);
+  const post = postId && posts.find((post) => post.id === postId);
   const data = post && {
     contactService: post.contactService,
     contactAddress: post.contactAddress,
@@ -41,7 +39,7 @@ export default async function Profile({
   return (
     <div className="flex content-center flex-col justify-center text-center">
       <img
-        src={getUrlFromIPFS(profile.avatar)}
+        src={getUrlFromIPFS(profile.avatar ?? "")}
         className="rounded-full w-24 h-24 mx-auto"
       />
       <h3 className="pt-4">{profile.name}</h3>
@@ -51,19 +49,19 @@ export default async function Profile({
       </div>
       {data && <Contact data={data} />}
 
-      {rows.length > 0 && (
+      {posts.length > 0 && (
         <>
           <h3 className="pt-4 pl-4 text-left">Latest posts</h3>
           <div>
             <div className="text-left">
               <div className="space-y-2">
-                {rows.map(
+                {posts.map(
                   (post) =>
                     post.id !== postId && (
                       <PostRow
                         key={post.id}
                         data={post}
-                        account={profile.account}
+                        account={profile.account ?? ""}
                         lang={lang}
                       />
                     )
