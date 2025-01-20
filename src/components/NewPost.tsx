@@ -122,7 +122,7 @@ export default function NewPost({
     };
     console.log(">>> insert", data);
     try {
-      await insertPostAction(data);
+      await insertPostAction(communitySlug, data);
       router.push(`/${communitySlug}?account=${profile.account}`);
       setLoading(false);
       return false;

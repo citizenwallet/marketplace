@@ -129,7 +129,7 @@ export default function EditPost({
       authorAvatar: profile.image_medium,
     };
 
-    await updatePostAction(id, updatedData);
+    await updatePostAction(communitySlug, id, updatedData);
 
     router.push(`/${communitySlug}/${formData.id}?account=${profile.account}`);
     setLoading(false);

@@ -3,7 +3,14 @@
 import { updatePost } from "@/db/posts";
 
 import { InsertPostData } from "@/db/posts";
+import { revalidatePath } from "next/cache";
 
-export async function updatePostAction(id: number, data: InsertPostData) {
+export async function updatePostAction(
+  communitySlug: string,
+  id: number,
+  data: InsertPostData
+) {
   await updatePost(id, data);
+
+  revalidatePath(`/${communitySlug}/${id}?account=${data.authorAccount}`);
 }

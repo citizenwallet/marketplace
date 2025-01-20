@@ -3,6 +3,14 @@ import "server-only";
 import { prisma } from "@/prisma";
 import { posts } from "@prisma/client";
 
+export async function getPost(id: number) {
+  const post = await prisma.posts.findUnique({
+    where: { id },
+  });
+
+  return post;
+}
+
 export async function getPosts(
   communitySlug: string,
   account?: string,
@@ -75,6 +83,7 @@ export async function getPostsByAuthor(
     where: {
       communitySlug,
       authorAccount,
+      status: "PUBLISHED",
     },
     orderBy: {
       id: "desc",
@@ -116,6 +125,15 @@ export async function updatePost(id: number, data: InsertPostData) {
   const post = await prisma.posts.update({
     where: { id },
     data,
+  });
+
+  return post;
+}
+
+export async function archivePost(id: number) {
+  const post = await prisma.posts.update({
+    where: { id },
+    data: { status: "DELETED" },
   });
 
   return post;

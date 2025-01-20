@@ -131,6 +131,14 @@ const PostContent = ({
           {t("Edit post")}
         </Link>
       )}
+      {data.authorAccount === account && (
+        <Link
+          className="button mt-6"
+          href={`/${communitySlug}/${data.id}/archive?account=${account}`}
+        >
+          {t("Archive post")}
+        </Link>
+      )}
     </>
   );
 };
