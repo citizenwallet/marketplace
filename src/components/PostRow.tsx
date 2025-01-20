@@ -1,23 +1,22 @@
 import moment from "moment";
-import 'moment/locale/fr'; 
-import 'moment/locale/en-gb';
+import "moment/locale/fr";
+import "moment/locale/en-gb";
 import { getUrlFromIPFS } from "@/lib/ipfs";
-import { QueryResultRow } from "@vercel/postgres";
 import Link from "next/link";
 import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { Badge } from "./ui/badge";
+import { posts } from "@prisma/client";
+import { cn } from "@/lib/utils";
 
 type Props = {
-  data: QueryResultRow;
+  data: posts;
   account: string;
   lang: string;
 };
 
-export default function PostRow({
-  data,
-  account,
-  lang
-}: Props) {
+export default function PostRow({ data, account, lang }: Props) {
   const t = Translator(lang);
   moment.locale(lang);
   const defaultAvatar = `https://api.multiavatar.com/${account}.png`;
@@ -34,9 +33,13 @@ export default function PostRow({
             <div className="rounded-full overflow-hidden w-8 h-8">
               <Image
                 alt="Avatar"
-                className="object-cover w-full h-full"
+                className="object-cover w-8 h-8"
                 height="32"
-                src={getUrlFromIPFS(data.authorAvatar) || defaultAvatar}
+                src={
+                  data.authorAvatar
+                    ? getUrlFromIPFS(data.authorAvatar) ?? defaultAvatar
+                    : defaultAvatar
+                }
                 style={{
                   aspectRatio: "32/32",
                   objectFit: "cover",
@@ -45,13 +48,26 @@ export default function PostRow({
               />
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {data.type === "OFFER" ? t(`offered by`) : t(`requested by`)} {data.authorName} (@
+              {data.type === "OFFER" ? t(`offered by`) : t(`requested by`)}{" "}
+              {data.authorName} (@
               {data.authorUsername}) {moment(data.createdAt).fromNow()}
+            </div>
+          </div>
+          <div className="flex justify-end items-center space-x-2">
+            <div
+              className={cn(
+                "py-1 px-2 text-sm rounded-full",
+                data.type === "OFFER"
+                  ? "bg-gray-500 text-white"
+                  : "bg-white text-gray-500"
+              )}
+            >
+              {data.type === "OFFER" ? t("Offer") : t("Request")}
             </div>
           </div>
         </div>
         <div className="flex items-center justify-center text-right ml-3 font-bold">
-          &gt;
+          <ArrowRight className="w-4 h-4 text-white" />
         </div>
       </div>
     </Link>

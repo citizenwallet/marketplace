@@ -7,15 +7,17 @@ export default async function Posts({
   account,
   selectedTag,
   lang,
+  type,
 }: {
   communitySlug: string;
   account: string;
   selectedTag?: string;
   lang: string;
+  type?: "REQUEST" | "OFFER";
 }) {
   const posts = selectedTag
-    ? await getPublishedPostsByTag(communitySlug, selectedTag)
-    : await getPublishedPosts(communitySlug);
+    ? await getPublishedPostsByTag(communitySlug, selectedTag, type)
+    : await getPublishedPosts(communitySlug, type);
 
   return (
     <div>

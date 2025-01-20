@@ -30,11 +30,15 @@ export async function getPosts(
   return posts;
 }
 
-export async function getPublishedPosts(communitySlug: string) {
+export async function getPublishedPosts(
+  communitySlug: string,
+  type?: "REQUEST" | "OFFER"
+) {
   const posts = await prisma.posts.findMany({
     where: {
       communitySlug,
       status: "PUBLISHED",
+      ...(type && { type }),
     },
     orderBy: {
       id: "desc",
@@ -46,7 +50,8 @@ export async function getPublishedPosts(communitySlug: string) {
 
 export async function getPublishedPostsByTag(
   communitySlug: string,
-  selectedTag: string
+  selectedTag: string,
+  type?: "REQUEST" | "OFFER"
 ) {
   const posts = await prisma.posts.findMany({
     where: {
@@ -55,6 +60,7 @@ export async function getPublishedPostsByTag(
       tags: {
         hasSome: [selectedTag.toLowerCase()],
       },
+      ...(type && { type }),
     },
     orderBy: {
       id: "desc",
