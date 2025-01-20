@@ -3,6 +3,8 @@ import { getPost } from "@/db/posts";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+export const dynamic = "force-dynamic";
+
 export default function Page({
   params,
   searchParams,

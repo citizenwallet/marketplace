@@ -5,6 +5,7 @@ import { sql } from "@/lib/db";
 import type { Post } from "@/types";
 import { getLanguage } from "@/lib/i18n";
 import { getPostBySlugAndId } from "@/db/posts";
+
 export const dynamic = "force-dynamic";
 
 export default async function ViewPost({
