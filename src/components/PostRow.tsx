@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { Badge } from "./ui/badge";
 import { posts } from "@prisma/client";
 import { cn } from "@/lib/utils";
 
