@@ -4,19 +4,24 @@ import TopNavigationBar from "@/components/TopNavigationBar";
 import { sql } from "@/lib/db";
 import type { Post } from "@/types";
 import { getLanguage } from "@/lib/i18n";
+import { getPostBySlugAndId } from "@/db/posts";
 export const dynamic = "force-dynamic";
 
 export default async function ViewPost({
   params,
   searchParams,
 }: {
-  params: any;
+  params: { communitySlug: string; postId: string };
   searchParams: any;
 }) {
   const lang = getLanguage(searchParams.lang);
 
-  const { rows }: { rows: Post[] } =
-    await sql`SELECT * from posts where "communitySlug"=${params.communitySlug} AND id=${params.postId}`;
+  const post = await getPostBySlugAndId(
+    params.communitySlug,
+    parseInt(params.postId)
+  );
+
+  if (!post) return <div>Post not found</div>;
 
   return (
     <main className="flex min-h-screen flex-col p-4 mb-4">
@@ -26,7 +31,8 @@ export default async function ViewPost({
       />
       <div className="items-center">
         <EditPost
-          data={rows[0] as Post}
+          id={parseInt(params.postId)}
+          data={post}
           communitySlug={params.communitySlug}
           account={searchParams.account}
           lang={lang}

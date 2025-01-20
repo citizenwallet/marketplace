@@ -111,3 +111,12 @@ export async function insertPost(data: InsertPostData) {
 
   return post;
 }
+
+export async function updatePost(id: number, data: InsertPostData) {
+  const post = await prisma.posts.update({
+    where: { id },
+    data,
+  });
+
+  return post;
+}

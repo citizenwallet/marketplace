@@ -3,16 +3,14 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-// import { Select } from "@/components/ui/select";
-// import * as Select from "@radix-ui/react-select";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import TagInput from "./TagInput";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
 import { getUrlFromIPFS } from "@/lib/ipfs";
 import moment from "moment";
-import 'moment/locale/fr'; 
-import 'moment/locale/en-gb';
+import "moment/locale/fr";
+import "moment/locale/en-gb";
 import { Translator } from "@/lib/i18n.client";
 
 const setExpiryDate = (selector: string): Date => {
@@ -33,18 +31,20 @@ interface Tag {
   id: string;
   text: string;
 }
-
-import type { Post } from "@/types";
+import { posts } from "@prisma/client";
+import { updatePostAction } from "@/app/[communitySlug]/[postId]/edit/actions";
 
 export default function EditPost({
+  id,
   account,
   communitySlug,
   data,
   lang,
 }: {
+  id: number;
   account: string;
   communitySlug: string;
-  data: Post;
+  data: posts;
   lang: string;
 }) {
   const t = Translator(lang);
@@ -112,7 +112,6 @@ export default function EditPost({
       return false;
     }
     const updatedData = {
-      id: formData.id,
       communitySlug,
       status: "PUBLISHED",
       type: formData.type,
@@ -129,13 +128,9 @@ export default function EditPost({
       authorAccount: profile.account,
       authorAvatar: profile.image_medium,
     };
-    console.log(">>> update", updatedData);
-    const res = await fetch("/api/posts", {
-      method: "PATCH",
-      body: JSON.stringify(updatedData),
-    });
-    const json = await res.json();
-    console.log(">>> response", json);
+
+    await updatePostAction(id, updatedData);
+
     router.push(`/${communitySlug}/${formData.id}?account=${profile.account}`);
     setLoading(false);
     return false;
@@ -172,7 +167,7 @@ export default function EditPost({
         <Label htmlFor="title">{t("Title")}</Label>
         <Input
           id="title"
-          defaultValue={data.title}
+          defaultValue={data.title ?? ""}
           placeholder={t("Enter the title")}
           required
           ref={firstInputRef}
@@ -208,7 +203,7 @@ export default function EditPost({
           rows={20}
           placeholder={t("Enter the description")}
           required
-          defaultValue={data.text}
+          defaultValue={data.text ?? ""}
           onChange={handleChange}
         />
       </div>
@@ -221,7 +216,8 @@ export default function EditPost({
           lang={lang}
         />
         <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
-          {t("Tags help people find your")} {formData.type === "OFFER" ? t("Offer") : t("Request")}
+          {t("Tags help people find your")}{" "}
+          {formData.type === "OFFER" ? t("Offer") : t("Request")}
         </p>
       </div>
       <div className="space-y-2">
@@ -232,16 +228,17 @@ export default function EditPost({
             step={0.01}
             className="mr-2"
             id="displayPrice"
-            defaultValue={
-              data.displayPrice || (data.price && data.price / 10 ** 6)
-            }
+            defaultValue={(data.price && data.price / 10 ** 6) ?? ""}
             placeholder={t("Price")}
             onChange={handleChange}
           />
           {community?.token && community.token.symbol}
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
-          {t("Price for your")} {formData.type === "OFFER" ? t("Offer") : t("Request")} ({t("optional and always negotiable, rule of thumb: 1")} {community?.token.symbol} {t("= 1 hour of work")})
+          {t("Price for your")}{" "}
+          {formData.type === "OFFER" ? t("Offer") : t("Request")} (
+          {t("optional and always negotiable, rule of thumb: 1")}{" "}
+          {community?.token.symbol} {t("= 1 hour of work")})
         </p>
       </div>
       <div className="space-y-2">
@@ -273,19 +270,28 @@ export default function EditPost({
           </select>
           <Input
             id="contactAddress"
-            defaultValue={data.contactAddress}
-            placeholder={t("Enter your") + " " + labels[formData.contactService].toLowerCase()}
+            defaultValue={data.contactAddress ?? ""}
+            placeholder={
+              t("Enter your") +
+              " " +
+              labels[formData.contactService].toLowerCase()
+            }
             onChange={handleChange}
           />
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("Your")} {labels[formData.contactService]} {t("will only be visible to people in the community that have")} {community?.token.symbol} {t("tokens. It will be removed from our database when your post expires.")}
+          {t("Your")} {labels[formData.contactService]}{" "}
+          {t("will only be visible to people in the community that have")}{" "}
+          {community?.token.symbol}{" "}
+          {t(
+            "tokens. It will be removed from our database when your post expires."
+          )}
         </p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="expiryDateSelector">{t("Expiry date")}</Label>
         <select id="expiryDateSelector" onChange={handleChangeExpiryDate}>
-          <option value={data.expiryDate.toString()}>
+          <option value={data.expiryDate?.toString() ?? ""}>
             {moment(formData.expiryDate).format("MMMM Do YYYY")}
           </option>
           <option value="week">{t("one week")}</option>
