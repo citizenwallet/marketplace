@@ -50,7 +50,6 @@ export const useProfile = (communitySlug: string, account: string) => {
     if (cachedItem) {
       const cacheEntry = JSON.parse(cachedItem);
       setProfile(cacheEntry.data);
-      // return [cacheEntry.data]; // we always fetch the new updated profile info for next load.
     }
 
     function setProfileCache(profile: any) {
@@ -58,16 +57,29 @@ export const useProfile = (communitySlug: string, account: string) => {
       setCache(cacheKey, profile);
     }
 
-    const configUrl = `${window.location.protocol}//${window.location.host}/api/getConfig`;
-    const community = new CitizenWalletCommunity(communitySlug);
-    community.configUrl = configUrl;
-    if (account.substring(0, 2) === "0x") {
-      community.getProfile(account).then((profile) => setProfileCache(profile));
-    } else {
-      community
-        .getProfileFromUsername(account)
-        .then((profile) => setProfileCache(profile));
+    function fetchProfile() {
+      const configUrl = `${window.location.protocol}//${window.location.host}/api/getConfig`;
+      const community = new CitizenWalletCommunity(communitySlug);
+      community.configUrl = configUrl;
+      if (account.substring(0, 2) === "0x") {
+        community
+          .getProfile(account)
+          .then((profile) => setProfileCache(profile));
+      } else {
+        community
+          .getProfileFromUsername(account)
+          .then((profile) => setProfileCache(profile));
+      }
     }
+
+    // Fetch immediately
+    fetchProfile();
+
+    // Then fetch every 5 seconds
+    const intervalId = setInterval(fetchProfile, 5000);
+
+    // Cleanup interval on unmount
+    return () => clearInterval(intervalId);
   }, [communitySlug, account]);
   return [profile];
 };

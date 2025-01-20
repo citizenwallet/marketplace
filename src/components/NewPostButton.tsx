@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useCommunity, useProfile } from "../hooks/citizenwallet";
 
 import { Translator } from "@/lib/i18n.client";
+import { Loader2 } from "lucide-react";
 
 export default function NewPostButton({
   communitySlug,
@@ -35,12 +36,12 @@ export default function NewPostButton({
   }
 
   return (
-    <div>
-      <Link href={"#"} className="button">
-        {t("Create a Profile")}
-      </Link>
+    <div className="flex flex-col items-center justify-center">
+      <div className="animate-spin">
+        <Loader2 className="w-4 h-4" />
+      </div>
       <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2">
-        {t("Create a free profile to start posting")}
+        {t("Creating your profile...")}
       </p>
     </div>
   );
