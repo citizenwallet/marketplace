@@ -27,7 +27,7 @@ model posts {
   text           String?
   tags           String[]
   /// in the number of decimals of the token used by the community (typically 6, e.g. 18.50 is 18500000
-  price          Int?
+  price          String?
   /// the symbol of the token used by the community
   currency       String?
   /// EMAIL, TELEGRAM, WHATSAPP, X

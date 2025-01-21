@@ -27,7 +27,8 @@ export default async function Profile({
   const community = new CommunityConfig(config);
 
   const balance =
-    (await getAccountBalance(community, profile.account ?? "")) ?? BigInt(0);
+    ((await getAccountBalance(community, profile.account ?? "")) ?? BigInt(0)) /
+    BigInt(10 ** community.primaryToken.decimals);
 
   const post = postId && posts.find((post) => post.id === postId);
   const data = post && {

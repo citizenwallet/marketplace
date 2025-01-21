@@ -56,6 +56,7 @@ export default function EditPost({
   moment.locale(lang);
   const router = useRouter();
   const community = new CommunityConfig(config);
+  const decimals = community.primaryToken.decimals;
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -119,7 +120,7 @@ export default function EditPost({
       tags: formData.tags,
       contactService: formData.contactService,
       contactAddress: formData.contactAddress?.trim() ?? null,
-      price: (formData.price ?? 0) * 10 ** 6,
+      price: `${parseFloat(formData.price ?? "0") * 10 ** decimals}`,
       currency: community.primaryToken.symbol,
       authorName: profile.name,
       expiryDate: formData.expiryDate,
@@ -227,7 +228,9 @@ export default function EditPost({
             step={0.01}
             className="mr-2"
             id="price"
-            defaultValue={(data.price && data.price / 10 ** 6) ?? ""}
+            defaultValue={
+              (data.price && parseFloat(data.price) / 10 ** decimals) ?? ""
+            }
             placeholder={t("Price")}
             onChange={handleChange}
           />

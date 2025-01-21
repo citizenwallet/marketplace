@@ -52,6 +52,7 @@ export default function NewPost({
   moment.locale(lang);
   const router = useRouter();
   const community = new CommunityConfig(config);
+  const decimals = community.primaryToken.decimals;
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "OFFER",
@@ -110,7 +111,7 @@ export default function NewPost({
       tags: formData.tags,
       contactService: formData.contactService,
       contactAddress: formData.contactAddress.trim(),
-      price: parseFloat(formData.price) * 10 ** 6,
+      price: `${parseFloat(formData.price) * 10 ** decimals}`,
       currency: community.primaryToken.symbol,
       authorName: profile.name,
       expiryDate: formData.expiryDate,

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "posts" ALTER COLUMN "price" SET DATA TYPE TEXT;

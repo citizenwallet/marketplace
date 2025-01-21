@@ -10,7 +10,12 @@ import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
 import { QueryResultRow } from "@vercel/postgres";
 import { getPostBySlugAndId } from "@/db/posts";
-import { Config, ProfileWithTokenId } from "@citizenwallet/sdk";
+import {
+  CommunityConfig,
+  Config,
+  ProfileWithTokenId,
+} from "@citizenwallet/sdk";
+import { posts } from "@prisma/client";
 
 export default async function PostComponent({
   communitySlug,
@@ -55,21 +60,6 @@ export default async function PostComponent({
   );
 }
 
-type PostData =
-  | QueryResultRow
-  | {
-      title: string;
-      authorAvatar: string;
-      authorName: string;
-      authorUsername: string;
-      createdAt: string;
-      price: number;
-      currency: string;
-      text: string;
-      id: number;
-      authorAccount: string;
-    };
-
 const PostContent = ({
   data,
   profile,
@@ -78,7 +68,7 @@ const PostContent = ({
   account,
   lang,
 }: {
-  data: PostData;
+  data: posts;
   profile: ProfileWithTokenId;
   communitySlug: string;
   config: Config;
@@ -87,6 +77,11 @@ const PostContent = ({
 }) => {
   const t = Translator(lang);
   moment.locale(lang);
+
+  const community = new CommunityConfig(config);
+  const decimals = community.primaryToken.decimals;
+
+  const price = data.price ? parseFloat(data.price) / 10 ** decimals : 0;
 
   const defaultAvatar = `https://api.multiavatar.com/${account}.png`;
 
@@ -112,13 +107,13 @@ const PostContent = ({
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {t("Posted by")} {data.authorName} (@
               {data.authorUsername}) | {moment(data.createdAt).fromNow()} |{" "}
-              {data.price / 10 ** 6} {data.currency}
+              {price.toFixed(2)} {data.currency}
             </div>
           </div>
         </div>
         <div className="prose dark:prose-dark mt-4 text">
           <Markdown remarkPlugins={[gfm]}>
-            {data.text.replace(/\n/g, "  \n")}
+            {data.text ? data.text.replace(/\n/g, "  \n") : ""}
           </Markdown>
         </div>
       </div>
