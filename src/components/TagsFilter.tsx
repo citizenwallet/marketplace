@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { sql } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
