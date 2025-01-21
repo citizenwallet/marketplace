@@ -44,6 +44,7 @@ async function AsyncPage({
   };
 }) {
   const lang = getLanguage(searchParams.lang);
+  console.log(">>> lang", lang);
   const t = Translator(lang);
   const account = searchParams.account;
   const selectedTag = searchParams.tag;
@@ -57,9 +58,6 @@ async function AsyncPage({
   let basePath = `/${params.communitySlug}?account=${account}`;
   if (searchParams.tag) {
     basePath += `&tag=${searchParams.tag}`;
-  }
-  if (lang) {
-    basePath += `&lang=${lang}`;
   }
 
   const config = await getCommunityConfig(params.communitySlug);
