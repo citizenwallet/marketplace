@@ -1,7 +1,6 @@
 import moment from "moment";
 import "moment/locale/fr";
 import "moment/locale/en-gb";
-import { getUrlFromIPFS } from "@/lib/ipfs";
 import Link from "next/link";
 import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
@@ -36,7 +35,7 @@ export default function PostRow({ data, account, lang }: Props) {
                 height="32"
                 src={
                   data.authorAvatar
-                    ? getUrlFromIPFS(data.authorAvatar) ?? defaultAvatar
+                    ? data.authorAvatar ?? defaultAvatar
                     : defaultAvatar
                 }
                 style={{

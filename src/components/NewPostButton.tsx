@@ -1,20 +1,21 @@
 "use client";
 import Link from "next/link";
-import { useCommunity, useProfile } from "../hooks/citizenwallet";
 
 import { Translator } from "@/lib/i18n.client";
 import { Loader2 } from "lucide-react";
+import { ProfileWithTokenId } from "@citizenwallet/sdk";
 
 export default function NewPostButton({
   communitySlug,
   account,
+  profile,
   lang,
 }: {
   communitySlug: string;
   account: string;
+  profile: ProfileWithTokenId | null;
   lang: any;
 }) {
-  const [profile] = useProfile(communitySlug, account);
   const t = Translator(lang);
   if (profile) {
     return (
@@ -27,7 +28,7 @@ export default function NewPostButton({
     );
   }
 
-  if (profile === undefined) {
+  if (!profile) {
     return (
       <div className="flex items-center justify-center h-14">
         {t("Loading your profile...")}

@@ -6,8 +6,32 @@ import Posts from "@/components/posts";
 import { getTags } from "@/db/tags";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Suspense } from "react";
+import { getProfileFromAddress } from "@citizenwallet/sdk";
+import { CommunityConfig } from "@citizenwallet/sdk";
+import { getCommunityConfig } from "../actions/community";
+import GenericLoadingPage from "@/components/GenericLoadingPage";
 
-export default async function Home({
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { communitySlug: string };
+  searchParams: {
+    lang: string;
+    account: string;
+    tag: string;
+    type?: "REQUEST" | "OFFER";
+  };
+}) {
+  return (
+    <Suspense fallback={<GenericLoadingPage />}>
+      <AsyncPage params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function AsyncPage({
   params,
   searchParams,
 }: {
@@ -29,8 +53,6 @@ export default async function Home({
 
   // Fetch tags and posts server-side
   const tags = await getTags(params.communitySlug);
-  console.log(">>> tags", tags);
-  // const posts = await getPosts(params.communitySlug, account, selectedTag);
 
   let basePath = `/${params.communitySlug}?account=${account}`;
   if (searchParams.tag) {
@@ -39,6 +61,18 @@ export default async function Home({
   if (lang) {
     basePath += `&lang=${lang}`;
   }
+
+  const config = await getCommunityConfig(params.communitySlug);
+  if (!config) return <div>Community not found</div>;
+
+  const ipfsDomain = process.env.IPFS_DOMAIN;
+  if (!ipfsDomain) return <div>IPFS domain not set</div>;
+
+  const profile = await getProfileFromAddress(
+    ipfsDomain,
+    new CommunityConfig(config),
+    account
+  );
 
   return (
     <main className="flex min-h-screen flex-col items-center p-2">
@@ -54,6 +88,7 @@ export default async function Home({
             <NewPostButton
               account={account}
               communitySlug={params.communitySlug}
+              profile={profile}
               lang={lang}
             />
           </div>

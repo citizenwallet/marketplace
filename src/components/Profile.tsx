@@ -1,33 +1,33 @@
 import PostRow from "./PostRow";
 export const dynamic = "force-dynamic";
-import CitizenWalletCommunity from "@/lib/citizenwallet";
-import { getUrlFromIPFS } from "@/lib/ipfs";
 import Contact from "./Contact";
 import { getPostsByAuthor } from "@/db/posts";
-
-interface Profile {
-  username: string | null;
-  name: string | null;
-  account: string | null;
-  avatar: string | null;
-}
+import {
+  CommunityConfig,
+  Config,
+  getAccountBalance,
+  ProfileWithTokenId,
+} from "@citizenwallet/sdk";
 
 export default async function Profile({
   communitySlug,
+  config,
   profile,
   postId,
   lang,
 }: {
   communitySlug: string;
-  profile: Profile;
+  config: Config;
+  profile: ProfileWithTokenId;
   postId?: number;
   lang: string;
 }) {
   const posts = await getPostsByAuthor(communitySlug, profile.account ?? "");
 
-  const cw = new CitizenWalletCommunity(communitySlug);
-  const balance = await cw.getBalance(profile.account ?? "");
-  const transactions = await cw.getTransactions(profile.account ?? "");
+  const community = new CommunityConfig(config);
+
+  const balance =
+    (await getAccountBalance(community, profile.account ?? "")) ?? BigInt(0);
 
   const post = postId && posts.find((post) => post.id === postId);
   const data = post && {
@@ -39,13 +39,13 @@ export default async function Profile({
   return (
     <div className="flex content-center flex-col justify-center text-center">
       <img
-        src={getUrlFromIPFS(profile.avatar ?? "")}
+        src={profile.image_medium ?? ""}
         className="rounded-full w-24 h-24 mx-auto"
       />
       <h3 className="pt-4">{profile.name}</h3>
       <p>@{profile.username}</p>
       <div className="my-2">
-        {balance} {cw.symbol} | {transactions.length} transactions
+        {balance.toString()} {community.primaryToken.symbol}
       </div>
       {data && <Contact data={data} />}
 

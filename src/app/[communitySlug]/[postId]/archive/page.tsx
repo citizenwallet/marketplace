@@ -1,4 +1,5 @@
 import ArchiveConfirmation from "@/components/ArchiveConfirmation";
+import GenericLoadingPage from "@/components/GenericLoadingPage";
 import { getPost } from "@/db/posts";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
@@ -13,9 +14,7 @@ export default function Page({
   searchParams: { account: string };
 }) {
   return (
-    <Suspense
-      fallback={<div className="h-screen w-screen text-center">Loading...</div>}
-    >
+    <Suspense fallback={<GenericLoadingPage />}>
       <AsyncPage params={params} searchParams={searchParams} />
     </Suspense>
   );

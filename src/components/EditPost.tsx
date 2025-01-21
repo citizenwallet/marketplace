@@ -6,8 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import TagInput from "./TagInput";
-import { useCommunity, useProfile } from "../hooks/citizenwallet";
-import { getUrlFromIPFS } from "@/lib/ipfs";
 import moment from "moment";
 import "moment/locale/fr";
 import "moment/locale/en-gb";
@@ -33,28 +31,38 @@ interface Tag {
 }
 import { posts } from "@prisma/client";
 import { updatePostAction } from "@/app/[communitySlug]/[postId]/edit/actions";
+import {
+  CommunityConfig,
+  Config,
+  ProfileWithTokenId,
+} from "@citizenwallet/sdk";
 
 export default function EditPost({
   id,
-  account,
   communitySlug,
+  config,
+  profile,
   data,
   lang,
 }: {
   id: number;
-  account: string;
   communitySlug: string;
+  config: Config;
+  profile: ProfileWithTokenId;
   data: posts;
   lang: string;
 }) {
   const t = Translator(lang);
   moment.locale(lang);
   const router = useRouter();
-  const [community] = useCommunity(communitySlug);
-  const [profile] = useProfile(communitySlug, account);
+  const community = new CommunityConfig(config);
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState((data as any) || {});
+  const [formData, setFormData] = useState({
+    ...data,
+    profile: profile,
+    expiryDateSelector: "week",
+  });
 
   const firstInputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -62,14 +70,6 @@ export default function EditPost({
       firstInputRef.current.focus();
     }
   }, []);
-
-  useEffect(() => {
-    if (profile) {
-      formData.profile = profile;
-    }
-  }, [formData, profile]);
-
-  if (!data) return null;
 
   const handleChangeExpiryDate = (event: any) => {
     setFormData({
@@ -89,7 +89,6 @@ export default function EditPost({
       label: string;
     } | null
   ) => {
-    console.log(">>> selectedOption", selectedOption);
     if (!selectedOption) return;
     handleChange({
       target: { id: "contactService", value: selectedOption.value },
@@ -106,9 +105,9 @@ export default function EditPost({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    console.log("submit, data", formData);
+
     if (!profile) {
-      console.error("User profile missing");
+      console.error("User profile or community missing");
       return false;
     }
     const updatedData = {
@@ -119,9 +118,9 @@ export default function EditPost({
       text: formData.text,
       tags: formData.tags,
       contactService: formData.contactService,
-      contactAddress: formData.contactAddress.trim(),
-      price: parseFloat(formData.displayPrice) * 10 ** 6,
-      currency: community.token.symbol,
+      contactAddress: formData.contactAddress?.trim() ?? null,
+      price: (formData.price ?? 0) * 10 ** 6,
+      currency: community.primaryToken.symbol,
       authorName: profile.name,
       expiryDate: formData.expiryDate,
       authorUsername: profile.username,
@@ -183,7 +182,7 @@ export default function EditPost({
               alt="Avatar"
               className="object-cover w-full h-full"
               height="32"
-              src={getUrlFromIPFS(profile.image_small)}
+              src={profile.image_small}
               style={{
                 aspectRatio: "32/32",
                 objectFit: "cover",
@@ -227,18 +226,18 @@ export default function EditPost({
             type="number"
             step={0.01}
             className="mr-2"
-            id="displayPrice"
+            id="price"
             defaultValue={(data.price && data.price / 10 ** 6) ?? ""}
             placeholder={t("Price")}
             onChange={handleChange}
           />
-          {community?.token && community.token.symbol}
+          {community.primaryToken && community.primaryToken.symbol}
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
           {t("Price for your")}{" "}
           {formData.type === "OFFER" ? t("Offer") : t("Request")} (
           {t("optional and always negotiable, rule of thumb: 1")}{" "}
-          {community?.token.symbol} {t("= 1 hour of work")})
+          {community.primaryToken.symbol} {t("= 1 hour of work")})
         </p>
       </div>
       <div className="space-y-2">
@@ -274,15 +273,15 @@ export default function EditPost({
             placeholder={
               t("Enter your") +
               " " +
-              labels[formData.contactService].toLowerCase()
+              labels[formData.contactService ?? "email"].toLowerCase()
             }
             onChange={handleChange}
           />
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t("Your")} {labels[formData.contactService]}{" "}
+          {t("Your")} {labels[formData.contactService ?? "email"]}{" "}
           {t("will only be visible to people in the community that have")}{" "}
-          {community?.token.symbol}{" "}
+          {community.primaryToken.symbol}{" "}
           {t(
             "tokens. It will be removed from our database when your post expires."
           )}

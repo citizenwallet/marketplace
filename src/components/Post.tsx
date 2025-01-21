@@ -2,37 +2,44 @@ import React from "react";
 import moment from "moment";
 import "moment/locale/fr";
 import "moment/locale/en-gb";
-import { getUrlFromIPFS } from "@/lib/ipfs";
 import Profile from "./Profile";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import gfm from "remark-gfm";
-import { sql } from "@/lib/db";
 import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
 import { QueryResultRow } from "@vercel/postgres";
 import { getPostBySlugAndId } from "@/db/posts";
+import { Config, ProfileWithTokenId } from "@citizenwallet/sdk";
 
 export default async function PostComponent({
   communitySlug,
   id,
   account,
+  config,
   lang,
 }: {
   communitySlug: string;
   id: number;
   account: string;
+  config: Config;
   lang: string;
 }) {
   const post = await getPostBySlugAndId(communitySlug, id);
 
   if (!post) return null;
 
-  const profile = {
-    username: post.authorUsername,
-    name: post.authorName,
-    account: post.authorAccount,
-    avatar: post.authorAvatar,
+  const defaultAvatar = `https://api.multiavatar.com/${account}.png`;
+
+  const profile: ProfileWithTokenId = {
+    username: post.authorUsername ?? "",
+    name: post.authorName ?? "",
+    account: post.authorAccount ?? "",
+    image: post.authorAvatar ?? defaultAvatar,
+    image_medium: post.authorAvatar ?? defaultAvatar,
+    image_small: post.authorAvatar ?? defaultAvatar,
+    description: "",
+    token_id: "0",
   };
 
   // Use a client-side component for translation
@@ -41,6 +48,7 @@ export default async function PostComponent({
       data={post}
       profile={profile}
       communitySlug={communitySlug}
+      config={config}
       account={account}
       lang={lang}
     />
@@ -62,29 +70,26 @@ type PostData =
       authorAccount: string;
     };
 
-type ProfileData = {
-  username: string | null;
-  name: string | null;
-  account: string | null;
-  avatar: string | null;
-};
-
 const PostContent = ({
   data,
   profile,
   communitySlug,
+  config,
   account,
   lang,
 }: {
   data: PostData;
-  profile: ProfileData;
+  profile: ProfileWithTokenId;
   communitySlug: string;
+  config: Config;
   account: string;
   lang: string;
 }) => {
   const t = Translator(lang);
   moment.locale(lang);
+
   const defaultAvatar = `https://api.multiavatar.com/${account}.png`;
+
   return (
     <>
       <div className="my-4 p-2 mb-16">
@@ -96,7 +101,7 @@ const PostContent = ({
                 alt="Avatar"
                 className="object-cover w-full h-full"
                 height="32"
-                src={getUrlFromIPFS(data.authorAvatar) || defaultAvatar}
+                src={data.authorAvatar || defaultAvatar}
                 style={{
                   aspectRatio: "32/32",
                   objectFit: "cover",
@@ -121,6 +126,7 @@ const PostContent = ({
         profile={profile}
         postId={data.id}
         communitySlug={communitySlug}
+        config={config}
         lang={lang}
       />
       {data.authorAccount === account && (

@@ -6,14 +6,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import TagInput from "./TagInput";
-import { useCommunity, useProfile } from "../hooks/citizenwallet";
-import { getUrlFromIPFS } from "@/lib/ipfs";
 import moment from "moment";
 import "moment/locale/fr";
 import "moment/locale/en-gb";
 import { Translator } from "@/lib/i18n.client";
 import { InsertPostData } from "@/db/posts";
 import { insertPostAction } from "@/app/[communitySlug]/new/actions";
+import {
+  CommunityConfig,
+  Config,
+  ProfileWithTokenId,
+} from "@citizenwallet/sdk";
 
 const setExpiryDate = (selector: string): Date => {
   const d = new Date();
@@ -35,19 +38,20 @@ interface Tag {
 }
 
 export default function NewPost({
-  account,
   communitySlug,
+  config,
+  profile,
   lang,
 }: {
-  account: string;
   communitySlug: string;
+  config: Config;
+  profile: ProfileWithTokenId;
   lang: string;
 }) {
   const t = Translator(lang);
   moment.locale(lang);
   const router = useRouter();
-  const [community] = useCommunity(communitySlug);
-  const [profile] = useProfile(communitySlug, account);
+  const community = new CommunityConfig(config);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     type: "OFFER",
@@ -59,7 +63,7 @@ export default function NewPost({
     expiryDate: setExpiryDate("week"),
     contactService: "email",
     contactAddress: "",
-    profile: null,
+    profile: profile,
   });
 
   const firstInputRef = useRef<HTMLInputElement | null>(null);
@@ -68,12 +72,6 @@ export default function NewPost({
       firstInputRef.current.focus();
     }
   }, []);
-
-  useEffect(() => {
-    if (profile) {
-      formData.profile = profile;
-    }
-  }, [formData, profile]);
 
   const handleChangeExpiryDate = (event: any) => {
     setFormData({
@@ -97,7 +95,7 @@ export default function NewPost({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    console.log("submit, data", formData);
+
     if (!profile) {
       console.error("User profile missing");
       return false;
@@ -113,14 +111,14 @@ export default function NewPost({
       contactService: formData.contactService,
       contactAddress: formData.contactAddress.trim(),
       price: parseFloat(formData.price) * 10 ** 6,
-      currency: community.token.symbol,
+      currency: community.primaryToken.symbol,
       authorName: profile.name,
       expiryDate: formData.expiryDate,
       authorUsername: profile.username,
       authorAccount: profile.account,
       authorAvatar: profile.image_small,
     };
-    console.log(">>> insert", data);
+
     try {
       await insertPostAction(communitySlug, data);
       router.push(`/${communitySlug}?account=${profile.account}`);
@@ -166,7 +164,7 @@ export default function NewPost({
               alt="Avatar"
               className="object-cover w-full h-full"
               height="32"
-              src={getUrlFromIPFS(profile.image_small)}
+              src={profile.image_small}
               style={{
                 aspectRatio: "32/32",
                 objectFit: "cover",
@@ -212,13 +210,13 @@ export default function NewPost({
             placeholder={t("Price")}
             onChange={handleChange}
           />
-          {community?.token && community.token.symbol}
+          {community.primaryToken && community.primaryToken.symbol}
         </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 lowercasefirst-letter:uppercase">
           {t("Price for your")}{" "}
           {formData.type === "OFFER" ? t("Offer") : t("Request")} (
           {t("optional and always negotiable, rule of thumb: 1")}{" "}
-          {community?.token.symbol} {t("= 1 hour of work")})
+          {community.primaryToken.symbol} {t("= 1 hour of work")})
         </p>
       </div>
       <div className="space-y-2">
@@ -251,7 +249,7 @@ export default function NewPost({
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {t("Your")} {labels[formData.contactService]}{" "}
             {t("will only be visible to people in the community that have")}{" "}
-            {community?.token.symbol}{" "}
+            {community.primaryToken.symbol}{" "}
             {t(
               "tokens. It will be removed from our database when your post expires."
             )}
