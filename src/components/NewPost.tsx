@@ -180,6 +180,9 @@ export default function NewPost({
       )}
       <div className="space-y-2">
         <Label htmlFor="text">{t("Text")}</Label>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          {t("Text description")}
+        </p>
         <Textarea
           id="text"
           rows={20}
