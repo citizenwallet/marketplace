@@ -60,7 +60,7 @@ export default async function AsyncPage({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 mx-4 text-xs">
+        <div className="flex flex-wrap gap-2 mx-4 my-8 text-xs">
           <TagsFilter
             communitySlug={params.communitySlug}
             account={account}

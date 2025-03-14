@@ -68,7 +68,7 @@ export default async function Profile({
 
       {posts.length > 1 && (
         <>
-          <h3 className="pt-4 pl-4 text-left">{t("Latest posts")}</h3>
+          <h3 className="pt-4 pl-4 text-left">{t("Other posts")}</h3>
           <div>
             <div className="text-left">
               <div className="space-y-2">

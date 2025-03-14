@@ -76,18 +76,13 @@ export default function PostRow({ data, loggedInAccountAddress, lang }: Props) {
           {/* Author info and timestamp */}
           <div className="flex flex-col  gap-0 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex-shrink-0">
-              {t("by")}{" "}
-              <span className="font-medium text-gray-700 dark:text-gray-300">
-                {data.authorName}
-              </span>
-              <span className="text-gray-400 dark:text-gray-500 ml-1">
-                (@{data.authorUsername})
-              </span>
-            </div>
-            <div>
-              <time className="text-gray-400 dark:text-gray-500 flex-shrink-0">
+              <time className="text-gray-400 dark:text-gray-500 flex-shrink-0 mr-1">
                 {moment(data.createdAt).fromNow()}
               </time>
+              {t("by")}{" "}
+              <span className="font-medium text-gray-600 dark:text-gray-400">
+                {data.authorName}
+              </span>
             </div>
           </div>
         </div>
