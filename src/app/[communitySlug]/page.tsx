@@ -53,7 +53,7 @@ export default async function AsyncPage({
 
   return (
     <main className="flex min-h-screen flex-col items-center p-2 w-full">
-      <div className="mt-4">
+      <div className="mt-4 w-full">
         <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6 mb-8">
           <div className="space-y-2">
             <div className="flex items-center gap-3 justify-between">

@@ -24,7 +24,7 @@ export default function PostRow({ data, account, lang }: Props) {
       className="block transition-all hover:scale-[1.01] active:scale-[0.99]"
       prefetch
     >
-      <div className="my-2 p-4 flex items-start gap-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+      <div className="my-2 p-4 flex items-start gap-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 rounded-lg border border-gray-100 dark:border-gray-700">
         {/* Avatar */}
         <div className="mt-1 rounded-full overflow-hidden w-12 h-12 flex-shrink-0 ring-2 ring-gray-100 dark:ring-gray-700">
           <Image
@@ -74,14 +74,14 @@ export default function PostRow({ data, account, lang }: Props) {
           </div>
 
           {/* Author info and timestamp */}
-          <div className="flex flex-wrap items-center gap-0 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex flex-col  gap-0 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex-shrink-0">
               {t("by")}{" "}
               <span className="font-medium text-gray-700 dark:text-gray-300">
                 {data.authorName}
               </span>
               <span className="text-gray-400 dark:text-gray-500 ml-1">
-                @{data.authorUsername}
+                (@{data.authorUsername})
               </span>
             </div>
             <div>
