@@ -14,12 +14,14 @@ export default async function Profile({
   config,
   profile,
   postId,
+  loggedInAccountAddress,
   lang,
 }: {
   communitySlug: string;
   config: Config;
   profile: ProfileWithTokenId;
   postId?: number;
+  loggedInAccountAddress?: string;
   lang: string;
 }) {
   const t = Translator(lang);
@@ -64,7 +66,7 @@ export default async function Profile({
                       <PostRow
                         key={post.id}
                         data={post}
-                        account={profile.account ?? ""}
+                        loggedInAccountAddress={loggedInAccountAddress}
                         lang={lang}
                       />
                     )

@@ -41,9 +41,9 @@ export default async function AsyncPage({
   if (!ipfsDomain) return <div>IPFS domain not set</div>;
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-2 w-full overflow-x-hidden">
+    <main className="flex min-h-screen flex-col items-center p-2 w-full overflow-x-hidden max-w-5xl mx-auto">
       <div className="mt-4 w-full">
-        <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6 mb-8">
+        <div className="mx-auto w-full px-4 lg:px-6 space-y-6 mb-8">
           <div className="space-y-2">
             <div className="flex items-center gap-3 justify-between">
               <h1 className="text-3xl font-bold">{t("Marketplace")}</h1>

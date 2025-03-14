@@ -127,6 +127,7 @@ const PostContent = ({
         communitySlug={communitySlug}
         config={config}
         lang={lang}
+        loggedInAccountAddress={account}
       />
       {data.authorAccount === account && (
         <Link
