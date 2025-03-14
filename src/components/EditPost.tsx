@@ -132,6 +132,7 @@ export default function EditPost({
 
     await updatePostAction(communitySlug, id, updatedData);
     await revalidatePath(`/${communitySlug}`);
+    await revalidatePath(`/${communitySlug}/${id}`);
 
     router.push(`/${communitySlug}/${formData.id}?account=${profile.account}`);
     setLoading(false);

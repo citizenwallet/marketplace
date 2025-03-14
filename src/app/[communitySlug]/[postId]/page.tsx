@@ -5,6 +5,9 @@ import { getLanguage } from "@/lib/i18n";
 import { getCommunityConfig } from "@/app/actions/community";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
 
+export const revalidate = 3600; // Cache for 1 hour by default
+export const dynamic = "force-dynamic";
+
 export default async function Page({
   params,
   searchParams,
