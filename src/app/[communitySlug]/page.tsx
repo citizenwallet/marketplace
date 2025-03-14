@@ -52,7 +52,7 @@ export default async function AsyncPage({
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-2 w-full">
+    <main className="flex min-h-screen flex-col items-center p-2 w-full overflow-x-hidden">
       <div className="mt-4 w-full">
         <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6 mb-8">
           <div className="space-y-2">
@@ -71,7 +71,7 @@ export default async function AsyncPage({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 m-4 text-xs">
+        <div className="flex flex-wrap gap-2 mx-4 text-xs">
           <TagsFilter
             communitySlug={params.communitySlug}
             account={account}
