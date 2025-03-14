@@ -270,7 +270,7 @@ export default function NewPost({
         </select>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           {t("Your post will be removed on")}{" "}
-          {moment(formData.expiryDate).format("MMMM Do YYYY")}
+          {moment(formData.expiryDate).format("D MMMM YYYY")}
         </p>
       </div>
       <button type="submit" className="button w-full !py-6" disabled={loading}>
