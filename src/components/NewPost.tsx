@@ -17,7 +17,6 @@ import {
   Config,
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
-import { revalidatePath } from "next/cache";
 
 const setExpiryDate = (selector: string): Date => {
   const d = new Date();
@@ -123,7 +122,6 @@ export default function NewPost({
 
     try {
       await insertPostAction(communitySlug, data);
-      await revalidatePath(`/${communitySlug}`);
       router.push(`/${communitySlug}?account=${profile.account}`);
       setLoading(false);
       return false;
@@ -276,7 +274,7 @@ export default function NewPost({
         </p>
       </div>
       <button type="submit" className="button w-full !py-6" disabled={loading}>
-        {t("Submit")}
+        {loading ? t("Submitting") : t("Submit")}
       </button>
     </form>
   );

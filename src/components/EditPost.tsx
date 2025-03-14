@@ -131,8 +131,6 @@ export default function EditPost({
     };
 
     await updatePostAction(communitySlug, id, updatedData);
-    await revalidatePath(`/${communitySlug}`);
-    await revalidatePath(`/${communitySlug}/${id}`);
 
     router.push(`/${communitySlug}/${formData.id}?account=${profile.account}`);
     setLoading(false);
@@ -310,7 +308,7 @@ export default function EditPost({
         </p>
       </div>
       <button type="submit" className="button w-full !py-6" disabled={loading}>
-        {t("Submit")}
+        {loading ? t("Submitting") : t("Submit")}
       </button>
     </form>
   );

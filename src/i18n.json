@@ -60,7 +60,8 @@
       "one season": "one season",
       "one year": "one year",
       "Your post will be removed on": "Your post will be removed on",
-      "Submit": "Submit"
+      "Submit": "Submit",
+      "Submitting": "Submitting..."
     }
   },
   "fr": {
@@ -125,7 +126,8 @@
       "one season": "une saison",
       "one year": "un an",
       "Your post will be removed on": "Votre post sera supprimé le",
-      "Submit": "Sauvegarder"
+      "Submit": "Sauvegarder",
+      "Submitting": "Sauvegarde en cours..."
     }
   }
 }
