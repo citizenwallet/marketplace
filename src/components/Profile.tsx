@@ -8,6 +8,7 @@ import {
   getAccountBalance,
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
+import { Translator } from "@/lib/i18n";
 
 export default async function Profile({
   communitySlug,
@@ -22,6 +23,8 @@ export default async function Profile({
   postId?: number;
   lang: string;
 }) {
+  const t = Translator(lang);
+
   const posts = await getPostsByAuthor(communitySlug, profile.account ?? "");
 
   const community = new CommunityConfig(config);
@@ -52,7 +55,7 @@ export default async function Profile({
 
       {posts.length > 0 && (
         <>
-          <h3 className="pt-4 pl-4 text-left">Latest posts</h3>
+          <h3 className="pt-4 pl-4 text-left">{t("Latest posts")}</h3>
           <div>
             <div className="text-left">
               <div className="space-y-2">

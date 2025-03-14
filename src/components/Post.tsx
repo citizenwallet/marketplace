@@ -81,7 +81,10 @@ const PostContent = ({
   const community = new CommunityConfig(config);
   const decimals = community.primaryToken.decimals;
 
-  const price = data.price ? parseFloat(data.price) / 10 ** decimals : 0;
+  const price =
+    data.price && !isNaN(Number(data.price))
+      ? parseFloat(data.price) / 10 ** decimals
+      : 0;
 
   const defaultAvatar = `https://api.multiavatar.com/${account}.png`;
 
@@ -106,8 +109,8 @@ const PostContent = ({
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {t("Posted by")} {data.authorName} (@
-              {data.authorUsername}) | {moment(data.createdAt).fromNow()} |{" "}
-              {price.toFixed(2)} {data.currency}
+              {data.authorUsername}) | {moment(data.createdAt).fromNow()}
+              {price > 0 ? ` | ${price.toFixed(2)} ${data.currency}` : ""}
             </div>
           </div>
         </div>

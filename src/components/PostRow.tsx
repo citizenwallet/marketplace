@@ -57,7 +57,7 @@ export default function PostRow({ data, account, lang }: Props) {
                 "py-1 px-2 text-sm rounded-full",
                 data.type === "OFFER"
                   ? "bg-gray-500 text-white"
-                  : "bg-white text-gray-500"
+                  : "bg-gray-100 text-gray-500 border-2 border-gray-500"
               )}
             >
               {data.type === "OFFER" ? t("Offer") : t("Request")}

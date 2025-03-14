@@ -62,6 +62,7 @@ async function AsyncPage({
       <TopNavigationBar
         communitySlug={params.communitySlug}
         account={searchParams.account}
+        lang={lang}
       />
       <div className="items-center">
         <EditPost

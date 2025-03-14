@@ -20,7 +20,9 @@
       "Loading posts...": "Loading posts...",
       "Type": "Type",
       "Offer": "Offer",
+      "Offers": "Offers",
       "Request": "Request",
+      "Requests": "Requests",
       "requested by": "requested by",
       "offered by": "offered by",
       "Title": "Title",
@@ -61,6 +63,7 @@
   },
   "fr": {
     "translation": {
+      "Latest posts": "Dernières annonces",
       "Welcome": "Bienvenue",
       "Language": "Langue",
       "Read More": "Lire la suite",
@@ -80,8 +83,10 @@
       "Loading posts...": "Chargement des posts...",
       "Type": "Type",
       "Offer": "Offre",
+      "Offers": "Offres",
       "offered by": "offert par",
       "Request": "Demande",
+      "Requests": "Demandes",
       "requested by": "demandé par",
       "Title": "Titre",
       "Enter the title": "Entrez le titre",

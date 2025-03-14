@@ -38,7 +38,11 @@ async function Async({
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 mb-4">
-      <TopNavigationBar communitySlug={communitySlug} account={account} />
+      <TopNavigationBar
+        communitySlug={communitySlug}
+        account={account}
+        lang={lang}
+      />
       <PostComponent
         communitySlug={communitySlug}
         id={parseInt(postId)}

@@ -44,7 +44,6 @@ async function AsyncPage({
   };
 }) {
   const lang = getLanguage(searchParams.lang);
-  console.log(">>> lang", lang);
   const t = Translator(lang);
   const account = searchParams.account;
   const selectedTag = searchParams.tag;
@@ -96,18 +95,18 @@ async function AsyncPage({
             href={type === "REQUEST" ? basePath : `${basePath}&type=REQUEST`}
           >
             <Button
-              className="w-18 text-white"
+              className="w-18"
               variant={type === "REQUEST" ? "default" : "outline"}
             >
-              {t("Request")}
+              {t("Requests")}
             </Button>
           </Link>
           <Link href={type === "OFFER" ? basePath : `${basePath}&type=OFFER`}>
             <Button
-              className="w-18 text-white"
+              className="w-18"
               variant={type === "OFFER" ? "default" : "outline"}
             >
-              {t("Offer")}
+              {t("Offers")}
             </Button>
           </Link>
         </div>
