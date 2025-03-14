@@ -26,7 +26,7 @@ export default function PostRow({ data, account, lang }: Props) {
     >
       <div className="my-2 p-4 flex items-start gap-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
         {/* Avatar */}
-        <div className="rounded-full overflow-hidden w-12 h-12 flex-shrink-0 ring-2 ring-gray-100 dark:ring-gray-700">
+        <div className="mt-1 rounded-full overflow-hidden w-12 h-12 flex-shrink-0 ring-2 ring-gray-100 dark:ring-gray-700">
           <Image
             alt={`Avatar of ${data.authorName}`}
             className="object-cover w-12 h-12"
@@ -45,7 +45,7 @@ export default function PostRow({ data, account, lang }: Props) {
         <div className="flex-1 min-w-0">
           {/* Title and badges row */}
           <div className="flex flex-wrap items-center gap-2 mb-1">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 truncate">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 flex-wrap">
               {data.title}
             </h2>
           </div>
