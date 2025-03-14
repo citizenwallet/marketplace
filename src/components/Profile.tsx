@@ -8,6 +8,7 @@ import {
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
 import { Translator } from "@/lib/i18n";
+import Image from "next/image";
 
 export default async function Profile({
   communitySlug,
@@ -41,12 +42,23 @@ export default async function Profile({
     title: post.title,
   };
 
+  const defaultAvatar = `https://api.multiavatar.com/${profile.account}.png`;
+
   return (
-    <div className="flex content-center flex-col justify-center text-center">
-      <img
-        src={profile.image_medium ?? ""}
-        className="rounded-full w-24 h-24 mx-auto"
+    <div className="flex content-center flex-col justify-center items-center text-center">
+      <Image
+        alt={`Avatar of ${profile.name}`}
+        className="rounded-full object-cover w-24 h-24"
+        src={profile.image_medium || defaultAvatar}
+        style={{
+          aspectRatio: "1",
+          objectFit: "cover",
+        }}
+        width={96}
+        height={96}
+        priority
       />
+
       <h3 className="pt-4">{profile.name}</h3>
       <p>@{profile.username}</p>
       <div className="my-2">
@@ -54,7 +66,7 @@ export default async function Profile({
       </div>
       {data && <Contact data={data} />}
 
-      {posts.length > 0 && (
+      {posts.length > 1 && (
         <>
           <h3 className="pt-4 pl-4 text-left">{t("Latest posts")}</h3>
           <div>

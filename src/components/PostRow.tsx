@@ -24,7 +24,7 @@ export default function PostRow({ data, loggedInAccountAddress, lang }: Props) {
       className="block transition-all hover:scale-[1.01] active:scale-[0.99]"
       prefetch
     >
-      <div className="my-2 p-4 flex items-start gap-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-750 rounded-lg border border-gray-100 dark:border-gray-700">
+      <div className="my-2 p-4 flex items-start gap-4 bg-white dark:bg-gray-800 hover:bg-gray-50 hover:dark:bg-gray-700 rounded-lg border border-gray-100 dark:border-gray-700">
         {/* Avatar */}
         <div className="mt-1 rounded-full overflow-hidden w-12 h-12 flex-shrink-0 ring-2 ring-gray-100 dark:ring-gray-700">
           <Image

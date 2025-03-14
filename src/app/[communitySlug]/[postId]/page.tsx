@@ -20,7 +20,7 @@ export default function PostPage({
 
   return (
     <main className="flex min-h-screen flex-col items-center p-2 w-full">
-      <div className="mx-auto w-full max-w-5xl px-1 lg:px-6 space-y-6 mb-8">
+      <div className="mx-auto w-full max-w-5xl p-1 lg:px-6 space-y-6 mb-8">
         <TopNavigationBar
           communitySlug={communitySlug}
           account={account}
