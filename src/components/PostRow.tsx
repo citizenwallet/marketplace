@@ -44,10 +44,14 @@ export default function PostRow({ data, account, lang }: Props) {
         {/* Content */}
         <div className="flex-1 min-w-0">
           {/* Title and badges row */}
-          <div className="flex flex-wrap items-center gap-2 mb-2">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 truncate">
               {data.title}
             </h2>
+          </div>
+
+          {/* Tags */}
+          <div className="flex flex-wrap gap-1.5 mb-2">
             <span
               className={cn(
                 "lowercase py-1 px-3 text-xs font-medium rounded-full",
@@ -58,10 +62,6 @@ export default function PostRow({ data, account, lang }: Props) {
             >
               {data.type === "OFFER" ? t("Offer") : t("Request")}
             </span>
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-2">
             {data.tags.map((tag) => (
               <span
                 key={tag}
@@ -74,7 +74,7 @@ export default function PostRow({ data, account, lang }: Props) {
           </div>
 
           {/* Author info and timestamp */}
-          <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex flex-wrap items-center gap-0 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex-shrink-0">
               {t("by")}{" "}
               <span className="font-medium text-gray-700 dark:text-gray-300">
@@ -84,9 +84,11 @@ export default function PostRow({ data, account, lang }: Props) {
                 @{data.authorUsername}
               </span>
             </div>
-            <time className="text-gray-400 dark:text-gray-500 flex-shrink-0">
-              {moment(data.createdAt).fromNow()}
-            </time>
+            <div>
+              <time className="text-gray-400 dark:text-gray-500 flex-shrink-0">
+                {moment(data.createdAt).fromNow()}
+              </time>
+            </div>
           </div>
         </div>
 

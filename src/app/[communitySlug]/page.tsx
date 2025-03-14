@@ -12,29 +12,10 @@ import GenericLoadingPage from "@/components/GenericLoadingPage";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: { communitySlug: string };
-  searchParams: {
-    lang: string;
-    account: string;
-    tag: string;
-    type?: "REQUEST" | "OFFER";
-  };
-}) {
-  return (
-    <Suspense fallback={<GenericLoadingPage />}>
-      <AsyncPage params={params} searchParams={searchParams} />
-    </Suspense>
-  );
-}
-
 export const revalidate = 3600; // Cache for 1 hour by default
 export const dynamic = "force-dynamic";
 
-async function AsyncPage({
+export default async function AsyncPage({
   params,
   searchParams,
 }: {
@@ -100,13 +81,15 @@ async function AsyncPage({
             tags={tags}
           />
         </div>
-        <Posts
-          communitySlug={params.communitySlug}
-          account={account}
-          selectedTag={selectedTag}
-          lang={lang}
-          type={searchParams.type}
-        />
+        <Suspense fallback={<GenericLoadingPage />}>
+          <Posts
+            communitySlug={params.communitySlug}
+            account={account}
+            selectedTag={selectedTag}
+            lang={lang}
+            type={searchParams.type}
+          />
+        </Suspense>
       </div>
     </main>
   );

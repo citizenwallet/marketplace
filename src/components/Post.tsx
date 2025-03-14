@@ -8,7 +8,6 @@ import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
-import { QueryResultRow } from "@vercel/postgres";
 import { getPostBySlugAndId } from "@/db/posts";
 import {
   CommunityConfig,
@@ -16,20 +15,22 @@ import {
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
 import { posts } from "@prisma/client";
+import { getCommunityConfig } from "@/app/actions/community";
 
 export default async function PostComponent({
   communitySlug,
   id,
   account,
-  config,
   lang,
 }: {
   communitySlug: string;
   id: number;
   account: string;
-  config: Config;
   lang: string;
 }) {
+  const config = await getCommunityConfig(communitySlug);
+  if (!config) return <div>Community not found</div>;
+
   const post = await getPostBySlugAndId(communitySlug, id);
 
   if (!post) return null;
