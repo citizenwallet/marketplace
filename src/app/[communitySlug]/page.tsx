@@ -5,15 +5,10 @@ import TagsFilter from "@/components/TagsFilter";
 import Posts from "@/components/posts";
 import { getTags } from "@/db/tags";
 import { Suspense } from "react";
-import { getProfileFromAddress } from "@citizenwallet/sdk";
-import { CommunityConfig } from "@citizenwallet/sdk";
 import { getCommunityConfig } from "../actions/community";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-
-export const revalidate = 3600; // Cache for 1 hour by default
-export const dynamic = "force-dynamic";
 
 export default async function AsyncPage({
   params,
@@ -44,12 +39,6 @@ export default async function AsyncPage({
 
   const ipfsDomain = process.env.IPFS_DOMAIN;
   if (!ipfsDomain) return <div>IPFS domain not set</div>;
-
-  const profile = await getProfileFromAddress(
-    ipfsDomain,
-    new CommunityConfig(config),
-    account
-  );
 
   return (
     <main className="flex min-h-screen flex-col items-center p-2 w-full overflow-x-hidden">

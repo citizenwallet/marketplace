@@ -1,5 +1,4 @@
 import PostRow from "./PostRow";
-export const dynamic = "force-dynamic";
 import Contact from "./Contact";
 import { getPostsByAuthor } from "@/db/posts";
 import {

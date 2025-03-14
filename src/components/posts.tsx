@@ -1,6 +1,5 @@
 import PostRow from "./PostRow";
 import { getPublishedPosts, getPublishedPostsByTag } from "@/db/posts";
-export const dynamic = "force-dynamic";
 
 export default async function Posts({
   communitySlug,

@@ -4,9 +4,6 @@ import TopNavigationBar from "@/components/TopNavigationBar";
 import { getLanguage } from "@/lib/i18n";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
 
-export const revalidate = 3600; // Cache for 1 hour by default
-export const dynamic = "force-dynamic";
-
 export default function PostPage({
   params,
   searchParams,

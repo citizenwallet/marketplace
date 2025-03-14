@@ -1,8 +1,6 @@
 import { Translator } from "@/lib/i18n";
-import { cn, getTagColor } from "@/lib/utils";
+import { getTagColor } from "@/lib/utils";
 import Link from "next/link";
-
-export const dynamic = "force-dynamic";
 
 export default async function TagsFilter({
   communitySlug,
