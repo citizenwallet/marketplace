@@ -1,16 +1,16 @@
 import { Translator, getLanguage } from "@/lib/i18n";
 import AccountRequiredError from "@/components/AccountRequiredError";
-import NewPostButton from "@/components/NewPostButton";
+import { isAddress } from "ethers";
 import TagsFilter from "@/components/TagsFilter";
 import Posts from "@/components/posts";
 import { getTags } from "@/db/tags";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Suspense } from "react";
 import { getProfileFromAddress } from "@citizenwallet/sdk";
 import { CommunityConfig } from "@citizenwallet/sdk";
 import { getCommunityConfig } from "../actions/community";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
+import { PlusIcon } from "lucide-react";
+import Link from "next/link";
 
 export default async function Page({
   params,
@@ -31,6 +31,9 @@ export default async function Page({
   );
 }
 
+export const revalidate = 3600; // Cache for 1 hour by default
+export const dynamic = "force-dynamic";
+
 async function AsyncPage({
   params,
   searchParams,
@@ -49,15 +52,11 @@ async function AsyncPage({
   const selectedTag = searchParams.tag;
   const type = searchParams.type;
 
-  if (!account || account === "undefined") return <AccountRequiredError />;
+  if (!account || account === "undefined" || !isAddress(account))
+    return <AccountRequiredError />;
 
   // Fetch tags and posts server-side
   const tags = await getTags(params.communitySlug);
-
-  let basePath = `/${params.communitySlug}?account=${account}`;
-  if (searchParams.tag) {
-    basePath += `&tag=${searchParams.tag}`;
-  }
 
   const config = await getCommunityConfig(params.communitySlug);
   if (!config) return <div>Community not found</div>;
@@ -76,46 +75,31 @@ async function AsyncPage({
       <div className="mt-4">
         <div className="mx-auto w-full max-w-5xl px-4 lg:px-6 space-y-6 mb-8">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold">{t("Marketplace")}</h1>
+            <div className="flex items-center gap-3 justify-between">
+              <h1 className="text-3xl font-bold">{t("Marketplace")}</h1>
+              <Link
+                href={`/${params.communitySlug}/new?account=${account}`}
+                className="rounded-full p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-colors"
+              >
+                <PlusIcon className="h-5 w-5" />
+              </Link>
+            </div>
             <p className="text-gray-500 dark:text-gray-400 w-9/12">
               {t("MarketplaceDescription")}
             </p>
           </div>
-          <div className="space-y-6 mb-8">
-            <NewPostButton
-              account={account}
-              communitySlug={params.communitySlug}
-              profile={profile}
-              lang={lang}
-            />
-          </div>
         </div>
-        <div className="flex items-center justify-center space-x-2">
-          <Link
-            href={type === "REQUEST" ? basePath : `${basePath}&type=REQUEST`}
-          >
-            <Button
-              className="w-18"
-              variant={type === "REQUEST" ? "default" : "outline"}
-            >
-              {t("Requests")}
-            </Button>
-          </Link>
-          <Link href={type === "OFFER" ? basePath : `${basePath}&type=OFFER`}>
-            <Button
-              className="w-18"
-              variant={type === "OFFER" ? "default" : "outline"}
-            >
-              {t("Offers")}
-            </Button>
-          </Link>
+
+        <div className="flex flex-wrap gap-2 m-4 text-xs">
+          <TagsFilter
+            communitySlug={params.communitySlug}
+            account={account}
+            type={type}
+            lang={lang}
+            selectedTag={selectedTag}
+            tags={tags}
+          />
         </div>
-        <TagsFilter
-          communitySlug={params.communitySlug}
-          account={account}
-          selectedTag={selectedTag}
-          tags={tags}
-        />
         <Posts
           communitySlug={params.communitySlug}
           account={account}

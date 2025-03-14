@@ -36,6 +36,7 @@ import {
   Config,
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
+import { revalidatePath } from "next/cache";
 
 export default function EditPost({
   id,
@@ -130,6 +131,7 @@ export default function EditPost({
     };
 
     await updatePostAction(communitySlug, id, updatedData);
+    await revalidatePath(`/${communitySlug}`);
 
     router.push(`/${communitySlug}/${formData.id}?account=${profile.account}`);
     setLoading(false);

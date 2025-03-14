@@ -94,7 +94,7 @@ const PostContent = ({
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{data.title}</h2>
           <div className="flex items-center space-x-2">
-            <div className="rounded-full overflow-hidden w-8 h-8">
+            <div className="rounded-full overflow-hidden w-8 h-8 flex-shrink-0">
               <Image
                 alt="Avatar"
                 className="object-cover w-full h-full"

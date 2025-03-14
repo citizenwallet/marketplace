@@ -2,6 +2,7 @@
   "en": {
     "translation": {
       "Latest posts": "Latest posts",
+      "by": "by",
       "Welcome": "Welcome",
       "Language": "Language",
       "Read More": "Read More",
@@ -65,6 +66,7 @@
   "fr": {
     "translation": {
       "Latest posts": "Dernières annonces",
+      "by": "par",
       "Welcome": "Bienvenue",
       "Language": "Langue",
       "Read More": "Lire la suite",
