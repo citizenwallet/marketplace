@@ -42,7 +42,7 @@ export default async function TagsFilter({
       </Link>
       {tags.map((tag) => (
         <Link
-          href={`/${communitySlug}?account=${account}&tag=${
+          href={`/${communitySlug}?account=${account}&type=${type || ""}&tag=${
             selectedTag === tag.tag ? "" : tag.tag
           }`}
           className={selectedTag === tag.tag ? "tag selected" : "tag"}

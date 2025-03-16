@@ -5,6 +5,9 @@ export async function getTags(communitySlug: string) {
     by: ["tags"],
     where: {
       communitySlug,
+      expiryDate: {
+        gt: new Date(),
+      },
     },
     _count: {
       tags: true,
