@@ -69,7 +69,7 @@ select {
 
 .tag {
   /* @apply font-bold px-2 py-1 border-2 border-gray-300 rounded-lg mr-1 inline-block mb-1; */
-  @apply lowercase block px-2 py-1 rounded-full text-xs font-medium border-2 border-gray-200/20 text-gray-700;
+  @apply lowercase block px-2 py-1 rounded-full text-xs font-medium border-2 border-gray-200/20 text-gray-700 hover:scale-[1.01] active:scale-[0.99];
 }
 
 .tag.selected {

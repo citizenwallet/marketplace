@@ -51,10 +51,10 @@ export default function PostRow({ data, loggedInAccountAddress, lang }: Props) {
           </div>
 
           {/* Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-2">
+          <div className="flex flex-wrap gap-1.5 mb-2 items-center">
             <span
               className={cn(
-                "lowercase py-1 px-3 text-xs font-medium rounded-full",
+                "tag",
                 data.type === "OFFER"
                   ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
                   : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
