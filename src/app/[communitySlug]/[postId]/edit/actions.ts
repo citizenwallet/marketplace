@@ -12,5 +12,6 @@ export async function updatePostAction(
 ) {
   await updatePost(id, data);
 
+  revalidatePath(`/${communitySlug}?account=${data.authorAccount}`);
   revalidatePath(`/${communitySlug}/${id}?account=${data.authorAccount}`);
 }

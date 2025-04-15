@@ -38,6 +38,9 @@ export async function getPublishedPosts(
     where: {
       communitySlug,
       status: "PUBLISHED",
+      expiryDate: {
+        gt: new Date(),
+      },
       ...(type && { type }),
     },
     orderBy: {
@@ -57,6 +60,9 @@ export async function getPublishedPostsByTag(
     where: {
       communitySlug,
       status: "PUBLISHED",
+      expiryDate: {
+        gt: new Date(),
+      },
       tags: {
         hasSome: [selectedTag.toLowerCase()],
       },
@@ -110,7 +116,7 @@ export async function insertPost(data: InsertPostData) {
       authorAccount: data.authorAccount,
       title: data.title,
       text: data.text,
-      tags: data.tags.filter((tag) => !!tag),
+      tags: data.tags.filter((tag) => !!tag).map((tag) => tag.toLowerCase()),
       status: data.status,
       type: data.type,
       authorName: data.authorName,
@@ -128,6 +134,9 @@ export async function insertPost(data: InsertPostData) {
 }
 
 export async function updatePost(id: number, data: InsertPostData) {
+  if (data.tags && data.tags.length > 0) {
+    data.tags = data.tags.map((tag) => tag.toLowerCase());
+  }
   const post = await prisma.posts.update({
     where: { id },
     data,

@@ -2,24 +2,9 @@ import React, { Suspense } from "react";
 import PostComponent from "@/components/Post";
 import TopNavigationBar from "@/components/TopNavigationBar";
 import { getLanguage } from "@/lib/i18n";
-import { getCommunityConfig } from "@/app/actions/community";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: { communitySlug: string; postId: string };
-  searchParams: { account: string; lang: string };
-}) {
-  return (
-    <Suspense fallback={<GenericLoadingPage />}>
-      <Async params={params} searchParams={searchParams} />
-    </Suspense>
-  );
-}
-
-async function Async({
+export default function PostPage({
   params,
   searchParams,
 }: {
@@ -33,19 +18,23 @@ async function Async({
   if (!communitySlug || !postId) return null;
   if (!account || account === "undefined") return <div>Account required</div>;
 
-  const config = await getCommunityConfig(communitySlug);
-  if (!config) return <div>Community not found</div>;
-
   return (
-    <main className="flex min-h-screen flex-col items-center p-4 mb-4">
-      <TopNavigationBar communitySlug={communitySlug} account={account} />
-      <PostComponent
-        communitySlug={communitySlug}
-        id={parseInt(postId)}
-        account={account}
-        config={config}
-        lang={lang}
-      />
+    <main className="flex min-h-screen flex-col items-center p-2 w-full">
+      <div className="mx-auto w-full max-w-5xl p-1 lg:px-6 space-y-6 mb-8">
+        <TopNavigationBar
+          communitySlug={communitySlug}
+          account={account}
+          lang={lang}
+        />
+        <Suspense fallback={<GenericLoadingPage />}>
+          <PostComponent
+            communitySlug={communitySlug}
+            id={parseInt(postId)}
+            account={account}
+            lang={lang}
+          />
+        </Suspense>
+      </div>
     </main>
   );
 }

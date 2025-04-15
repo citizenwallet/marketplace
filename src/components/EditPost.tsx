@@ -36,6 +36,7 @@ import {
   Config,
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
+import { revalidatePath } from "next/cache";
 
 export default function EditPost({
   id,
@@ -303,11 +304,11 @@ export default function EditPost({
         </select>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           {t("Your post will be removed on")}{" "}
-          {moment(formData.expiryDate).format("MMMM Do YYYY")}{" "}
+          {moment(formData.expiryDate).format("Do MMMM YYYY")}{" "}
         </p>
       </div>
       <button type="submit" className="button w-full !py-6" disabled={loading}>
-        {t("Submit")}
+        {loading ? t("Submitting") : t("Submit")}
       </button>
     </form>
   );

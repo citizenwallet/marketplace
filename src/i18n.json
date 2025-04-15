@@ -1,6 +1,8 @@
 {
   "en": {
     "translation": {
+      "Other posts": "Other posts",
+      "by": "by",
       "Welcome": "Welcome",
       "Language": "Language",
       "Read More": "Read More",
@@ -20,7 +22,9 @@
       "Loading posts...": "Loading posts...",
       "Type": "Type",
       "Offer": "Offer",
+      "Offers": "Offers",
       "Request": "Request",
+      "Requests": "Requests",
       "requested by": "requested by",
       "offered by": "offered by",
       "Title": "Title",
@@ -56,11 +60,14 @@
       "one season": "one season",
       "one year": "one year",
       "Your post will be removed on": "Your post will be removed on",
-      "Submit": "Submit"
+      "Submit": "Submit",
+      "Submitting": "Submitting..."
     }
   },
   "fr": {
     "translation": {
+      "Other posts": "Autres annonces",
+      "by": "par",
       "Welcome": "Bienvenue",
       "Language": "Langue",
       "Read More": "Lire la suite",
@@ -70,18 +77,20 @@
       "ago": "il y a",
       "English": "Anglais",
       "French": "Français",
-      "New Post": "Nouveau post",
+      "New Post": "Nouvelle annonce",
       "Loading your profile...": "Chargement de votre profil...",
       "Creating your profile...": "Création de votre profil...",
       "Create a Profile": "Créer un profil",
       "Marketplace": "Marché",
       "MarketplaceDescription": "Partagez ce que vous cherchez ou ce que vous avez à offrir.",
       "Loading tags...": "Chargement des tags...",
-      "Loading posts...": "Chargement des posts...",
+      "Loading posts...": "Chargement des annonces...",
       "Type": "Type",
       "Offer": "Offre",
+      "Offers": "Offres",
       "offered by": "offert par",
       "Request": "Demande",
+      "Requests": "Demandes",
       "requested by": "demandé par",
       "Title": "Titre",
       "Enter the title": "Entrez le titre",
@@ -91,7 +100,7 @@
       "Enter the description": "Entrez la description",
       "Tags": "Tags",
       "Tags help people find your": "Les tags aident les gens à trouver votre",
-      "Add a new tag": "Nouveau tag",
+      "Add a new tag": "Ajouter un tag",
       "Price": "Prix",
       "Price for your": "Prix pour votre",
       "request": "demande",
@@ -117,7 +126,8 @@
       "one season": "une saison",
       "one year": "un an",
       "Your post will be removed on": "Votre post sera supprimé le",
-      "Submit": "Sauvegarder"
+      "Submit": "Sauvegarder",
+      "Submitting": "Sauvegarde en cours..."
     }
   }
 }

@@ -8,7 +8,6 @@ import Markdown from "react-markdown";
 import gfm from "remark-gfm";
 import { Translator } from "@/lib/i18n.client";
 import Image from "next/image";
-import { QueryResultRow } from "@vercel/postgres";
 import { getPostBySlugAndId } from "@/db/posts";
 import {
   CommunityConfig,
@@ -16,20 +15,22 @@ import {
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
 import { posts } from "@prisma/client";
+import { getCommunityConfig } from "@/app/actions/community";
 
 export default async function PostComponent({
   communitySlug,
   id,
   account,
-  config,
   lang,
 }: {
   communitySlug: string;
   id: number;
   account: string;
-  config: Config;
   lang: string;
 }) {
+  const config = await getCommunityConfig(communitySlug);
+  if (!config) return <div>Community not found</div>;
+
   const post = await getPostBySlugAndId(communitySlug, id);
 
   if (!post) return null;
@@ -81,7 +82,10 @@ const PostContent = ({
   const community = new CommunityConfig(config);
   const decimals = community.primaryToken.decimals;
 
-  const price = data.price ? parseFloat(data.price) / 10 ** decimals : 0;
+  const price =
+    data.price && !isNaN(Number(data.price))
+      ? parseFloat(data.price) / 10 ** decimals
+      : 0;
 
   const defaultAvatar = `https://api.multiavatar.com/${account}.png`;
 
@@ -91,7 +95,7 @@ const PostContent = ({
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">{data.title}</h2>
           <div className="flex items-center space-x-2">
-            <div className="rounded-full overflow-hidden w-8 h-8">
+            <div className="rounded-full overflow-hidden w-8 h-8 flex-shrink-0">
               <Image
                 alt="Avatar"
                 className="object-cover w-full h-full"
@@ -106,8 +110,8 @@ const PostContent = ({
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400">
               {t("Posted by")} {data.authorName} (@
-              {data.authorUsername}) | {moment(data.createdAt).fromNow()} |{" "}
-              {price.toFixed(2)} {data.currency}
+              {data.authorUsername}) | {moment(data.createdAt).fromNow()}
+              {price > 0 ? ` | ${price.toFixed(2)} ${data.currency}` : ""}
             </div>
           </div>
         </div>
@@ -123,6 +127,7 @@ const PostContent = ({
         communitySlug={communitySlug}
         config={config}
         lang={lang}
+        loggedInAccountAddress={account}
       />
       {data.authorAccount === account && (
         <Link

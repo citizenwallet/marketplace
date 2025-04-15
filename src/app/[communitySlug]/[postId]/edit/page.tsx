@@ -8,8 +8,6 @@ import { getProfileFromAddress } from "@citizenwallet/sdk";
 import { CommunityConfig } from "@citizenwallet/sdk";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
 
-export const dynamic = "force-dynamic";
-
 export default async function Page({
   params,
   searchParams,
@@ -62,6 +60,7 @@ async function AsyncPage({
       <TopNavigationBar
         communitySlug={params.communitySlug}
         account={searchParams.account}
+        lang={lang}
       />
       <div className="items-center">
         <EditPost

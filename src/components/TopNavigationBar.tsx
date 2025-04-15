@@ -1,12 +1,15 @@
 import Link from "next/link";
-
+import { Translator } from "@/lib/i18n";
 export default function TopNavigationBar({
   communitySlug,
   account,
+  lang,
 }: {
   communitySlug: string;
   account: string;
+  lang: string;
 }) {
+  const t = Translator(lang);
   return (
     <Link
       href={`/${communitySlug}?account=${account}`}
@@ -29,7 +32,7 @@ export default function TopNavigationBar({
             ></path>
           </svg>
         </div>
-        <div className="font-bold">marketplace</div>
+        <div className="font-bold">{t("Marketplace")}</div>
       </div>
     </Link>
   );

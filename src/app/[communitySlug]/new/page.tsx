@@ -46,17 +46,31 @@ async function AsyncPage({
     new CommunityConfig(config),
     account
   );
-  if (!profile) return <div>Profile not found</div>;
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 mb-4">
-      <TopNavigationBar communitySlug={communitySlug} account={account} />
-      <NewPost
+      <TopNavigationBar
         communitySlug={communitySlug}
-        config={config}
-        profile={profile}
+        account={account}
         lang={lang}
       />
+      {!profile && (
+        <div className="flex flex-col justify-center h-full">
+          <div className="text-2xl font-bold">Profile missing</div>
+          <div className="text-sm text-gray-500">
+            You need a profile to create a post. You can do this by going back
+            to the main screen of the Citizen Wallet app and tap on your avatar.
+          </div>
+        </div>
+      )}
+      {profile && (
+        <NewPost
+          communitySlug={communitySlug}
+          config={config}
+          profile={profile}
+          lang={lang}
+        />
+      )}
     </main>
   );
 }
