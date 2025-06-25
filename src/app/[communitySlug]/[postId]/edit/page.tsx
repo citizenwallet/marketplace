@@ -4,9 +4,11 @@ import { getLanguage } from "@/lib/i18n";
 import { getPostBySlugAndId } from "@/db/posts";
 import { getCommunityConfig } from "@/app/actions/community";
 import { Suspense } from "react";
-import { getProfileFromAddress } from "@citizenwallet/sdk";
+import { getProfileFromAddress, verifyConnectedUrl } from "@citizenwallet/sdk";
 import { CommunityConfig } from "@citizenwallet/sdk";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
+import { isAddress } from "ethers";
+import AccountRequiredError from "@/components/AccountRequiredError";
 
 export default async function Page({
   params,
@@ -29,11 +31,10 @@ async function AsyncPage({
   params: { communitySlug: string; postId: string };
   searchParams: {
     lang: string;
-    account: string;
+    account?: string;
   };
 }) {
   const lang = getLanguage(searchParams.lang);
-  const account = searchParams.account;
   const post = await getPostBySlugAndId(
     params.communitySlug,
     parseInt(params.postId)
@@ -44,6 +45,24 @@ async function AsyncPage({
   const config = await getCommunityConfig(params.communitySlug);
 
   if (!config) return <div>Community not found</div>;
+
+  let account = searchParams.account;
+
+  if (!account || account === "undefined" || !isAddress(account)) {
+    try {
+      const community = new CommunityConfig(config);
+
+      account =
+        (await verifyConnectedUrl(community, {
+          params: new URLSearchParams(searchParams),
+        })) ?? undefined;
+    } catch (error) {
+      console.error("Account verification error:", error);
+      return <AccountRequiredError />;
+    }
+  }
+
+  if (!account || account === "undefined") return <div>Account required</div>;
 
   const ipfsDomain = process.env.IPFS_DOMAIN;
   if (!ipfsDomain) return <div>IPFS domain not set</div>;
@@ -59,7 +78,7 @@ async function AsyncPage({
     <main className="flex min-h-screen flex-col p-4 mb-4">
       <TopNavigationBar
         communitySlug={params.communitySlug}
-        account={searchParams.account}
+        account={account}
         lang={lang}
       />
       <div className="items-center">

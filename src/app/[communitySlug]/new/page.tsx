@@ -4,8 +4,13 @@ import TopNavigationBar from "@/components/TopNavigationBar";
 import { getLanguage } from "@/lib/i18n";
 import { Suspense } from "react";
 import { getCommunityConfig } from "@/app/actions/community";
-import { CommunityConfig, getProfileFromAddress } from "@citizenwallet/sdk";
+import {
+  CommunityConfig,
+  getProfileFromAddress,
+  verifyConnectedUrl,
+} from "@citizenwallet/sdk";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
+import { isAddress } from "ethers";
 
 export default function Page({
   params,
@@ -29,14 +34,30 @@ async function AsyncPage({
   searchParams: any;
 }) {
   const communitySlug = params.communitySlug;
-  const account = searchParams.account;
   const lang = getLanguage(searchParams.lang);
 
   if (!communitySlug) return null;
-  if (!account || account === "undefined") return <AccountRequiredError />;
 
   const config = await getCommunityConfig(communitySlug);
   if (!config) return <div>Community not found</div>;
+
+  let account = searchParams.account;
+
+  if (!account || account === "undefined" || !isAddress(account)) {
+    try {
+      const community = new CommunityConfig(config);
+
+      account =
+        (await verifyConnectedUrl(community, {
+          params: new URLSearchParams(searchParams),
+        })) ?? undefined;
+    } catch (error) {
+      console.error("Account verification error:", error);
+      return <AccountRequiredError />;
+    }
+  }
+
+  if (!account || account === "undefined") return <AccountRequiredError />;
 
   const ipfsDomain = process.env.IPFS_DOMAIN;
   if (!ipfsDomain) return <div>IPFS domain not set</div>;

@@ -9,6 +9,7 @@ import { getCommunityConfig } from "../actions/community";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { CommunityConfig, verifyConnectedUrl } from "@citizenwallet/sdk";
 
 export default async function AsyncPage({
   params,
@@ -17,25 +18,43 @@ export default async function AsyncPage({
   params: { communitySlug: string };
   searchParams: {
     lang: string;
-    account: string;
+    account?: string;
     tag: string;
     type?: "REQUEST" | "OFFER";
+    sigAuthAccount?: string;
+    sigAuthExpiry?: string;
+    sigAuthSignature?: string;
+    sigAuthRedirect?: string;
   };
 }) {
+  const config = await getCommunityConfig(params.communitySlug);
+  if (!config) return <div>Community not found</div>;
+
   const lang = getLanguage(searchParams.lang);
   const t = Translator(lang);
-  const account = searchParams.account;
   const selectedTag = searchParams.tag;
   const type = searchParams.type;
+  let account = searchParams.account;
+
+  if (!account || account === "undefined" || !isAddress(account)) {
+    try {
+      const community = new CommunityConfig(config);
+
+      account =
+        (await verifyConnectedUrl(community, {
+          params: new URLSearchParams(searchParams),
+        })) ?? undefined;
+    } catch (error) {
+      console.error("Account verification error:", error);
+      return <AccountRequiredError />;
+    }
+  }
 
   if (!account || account === "undefined" || !isAddress(account))
     return <AccountRequiredError />;
 
   // Fetch tags and posts server-side
   const tags = await getTags(params.communitySlug);
-
-  const config = await getCommunityConfig(params.communitySlug);
-  if (!config) return <div>Community not found</div>;
 
   const ipfsDomain = process.env.IPFS_DOMAIN;
   if (!ipfsDomain) return <div>IPFS domain not set</div>;

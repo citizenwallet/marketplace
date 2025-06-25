@@ -3,19 +3,42 @@ import PostComponent from "@/components/Post";
 import TopNavigationBar from "@/components/TopNavigationBar";
 import { getLanguage } from "@/lib/i18n";
 import GenericLoadingPage from "@/components/GenericLoadingPage";
+import { getCommunityConfig } from "@/app/actions/community";
+import { isAddress } from "ethers";
+import { CommunityConfig, verifyConnectedUrl } from "@citizenwallet/sdk";
+import AccountRequiredError from "@/components/AccountRequiredError";
 
-export default function PostPage({
+export default async function PostPage({
   params,
   searchParams,
 }: {
   params: { communitySlug: string; postId: string };
-  searchParams: { account: string; lang: string };
+  searchParams: { account?: string; lang: string };
 }) {
   const { communitySlug, postId } = params;
-  const { account } = searchParams;
   const lang = getLanguage(searchParams.lang);
 
   if (!communitySlug || !postId) return null;
+
+  const config = await getCommunityConfig(communitySlug);
+  if (!config) return <div>Community not found</div>;
+
+  let account = searchParams.account;
+
+  if (!account || account === "undefined" || !isAddress(account)) {
+    try {
+      const community = new CommunityConfig(config);
+
+      account =
+        (await verifyConnectedUrl(community, {
+          params: new URLSearchParams(searchParams),
+        })) ?? undefined;
+    } catch (error) {
+      console.error("Account verification error:", error);
+      return <AccountRequiredError />;
+    }
+  }
+
   if (!account || account === "undefined") return <div>Account required</div>;
 
   return (

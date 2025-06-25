@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@citizenwallet/sdk": "^2.0.63",
+    "@citizenwallet/sdk": "^2.0.96",
     "@neondatabase/serverless": "^0.10.4",
     "@prisma/adapter-neon": "^6.2.1",
     "@prisma/client": "^6.2.1",
