@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TagInput from "./TagInput";
 import moment from "moment";
 import "moment/locale/fr";
@@ -48,6 +48,8 @@ export default function NewPost({
   profile: ProfileWithTokenId;
   lang: string;
 }) {
+  const searchParams = useSearchParams();
+
   const t = Translator(lang);
   moment.locale(lang);
   const router = useRouter();
@@ -121,8 +123,12 @@ export default function NewPost({
     };
 
     try {
-      await insertPostAction(communitySlug, data);
-      router.push(`/${communitySlug}?account=${profile.account}`);
+      await insertPostAction(
+        communitySlug,
+        searchParams as unknown as URLSearchParams,
+        data
+      );
+      router.back();
       setLoading(false);
       return false;
     } catch (e) {

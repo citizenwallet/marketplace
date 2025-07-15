@@ -22,11 +22,13 @@ export default async function PostComponent({
   id,
   account,
   lang,
+  searchParams,
 }: {
   communitySlug: string;
   id: number;
   account: string;
   lang: string;
+  searchParams: URLSearchParams;
 }) {
   const config = await getCommunityConfig(communitySlug);
   if (!config) return <div>Community not found</div>;
@@ -57,6 +59,7 @@ export default async function PostComponent({
       config={config}
       account={account}
       lang={lang}
+      searchParams={searchParams}
     />
   );
 }
@@ -68,6 +71,7 @@ const PostContent = ({
   config,
   account,
   lang,
+  searchParams,
 }: {
   data: posts;
   profile: ProfileWithTokenId;
@@ -75,6 +79,7 @@ const PostContent = ({
   config: Config;
   account: string;
   lang: string;
+  searchParams: URLSearchParams;
 }) => {
   const t = Translator(lang);
   moment.locale(lang);
@@ -127,12 +132,12 @@ const PostContent = ({
         communitySlug={communitySlug}
         config={config}
         lang={lang}
-        loggedInAccountAddress={account}
+        searchParams={searchParams}
       />
       {data.authorAccount === account && (
         <Link
           className="button mt-6"
-          href={`/${communitySlug}/${data.id}/edit?account=${account}`}
+          href={`/${communitySlug}/${data.id}/edit?${searchParams.toString()}`}
         >
           {t("Edit post")}
         </Link>
@@ -140,7 +145,9 @@ const PostContent = ({
       {data.authorAccount === account && (
         <Link
           className="button mt-6"
-          href={`/${communitySlug}/${data.id}/archive?account=${account}`}
+          href={`/${communitySlug}/${
+            data.id
+          }/archive?${searchParams.toString()}`}
         >
           {t("Archive post")}
         </Link>

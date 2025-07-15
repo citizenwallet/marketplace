@@ -10,17 +10,18 @@ import { cn, getTagColor } from "@/lib/utils";
 
 type Props = {
   data: posts;
-  loggedInAccountAddress?: string;
+  searchParams: URLSearchParams;
   lang: string;
 };
 
-export default function PostRow({ data, loggedInAccountAddress, lang }: Props) {
+export default function PostRow({ data, searchParams, lang }: Props) {
   const t = Translator(lang);
   moment.locale(lang);
   const defaultAvatar = `https://api.multiavatar.com/${data.authorAccount}.png`;
+
   return (
     <Link
-      href={`/${data.communitySlug}/${data.id}?account=${loggedInAccountAddress}`}
+      href={`/${data.communitySlug}/${data.id}?${searchParams.toString()}`}
       className="block transition-all hover:scale-[1.01] active:scale-[0.99]"
       prefetch
     >

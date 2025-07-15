@@ -13,7 +13,14 @@ export default async function PostPage({
   searchParams,
 }: {
   params: { communitySlug: string; postId: string };
-  searchParams: { account?: string; lang: string };
+  searchParams: {
+    account?: string;
+    lang: string;
+    sigAuthAccount?: string;
+    sigAuthExpiry?: string;
+    sigAuthSignature?: string;
+    sigAuthRedirect?: string;
+  };
 }) {
   const { communitySlug, postId } = params;
   const lang = getLanguage(searchParams.lang);
@@ -39,22 +46,20 @@ export default async function PostPage({
     }
   }
 
-  if (!account || account === "undefined") return <div>Account required</div>;
+  if (!account || account === "undefined" || !isAddress(account))
+    return <AccountRequiredError />;
 
   return (
     <main className="flex min-h-screen flex-col items-center p-2 w-full">
       <div className="mx-auto w-full max-w-5xl p-1 lg:px-6 space-y-6 mb-8">
-        <TopNavigationBar
-          communitySlug={communitySlug}
-          account={account}
-          lang={lang}
-        />
+        <TopNavigationBar lang={lang} />
         <Suspense fallback={<GenericLoadingPage />}>
           <PostComponent
             communitySlug={communitySlug}
             id={parseInt(postId)}
             account={account}
             lang={lang}
+            searchParams={new URLSearchParams(searchParams)}
           />
         </Suspense>
       </div>

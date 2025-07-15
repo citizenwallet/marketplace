@@ -7,9 +7,10 @@ import { revalidatePath } from "next/cache";
 
 export async function insertPostAction(
   communitySlug: string,
+  searchParams: URLSearchParams,
   data: InsertPostData
 ) {
   await insertPost(data);
 
-  revalidatePath(`/${communitySlug}?account=${data.authorAccount}`);
+  revalidatePath(`/${communitySlug}?${searchParams.toString()}`);
 }

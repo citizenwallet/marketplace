@@ -1,20 +1,18 @@
-import Link from "next/link";
-import { Translator } from "@/lib/i18n";
-export default function TopNavigationBar({
-  communitySlug,
-  account,
-  lang,
-}: {
-  communitySlug: string;
-  account: string;
-  lang: string;
-}) {
-  const t = Translator(lang);
+"use client";
+
+import { useRouter } from "next/navigation";
+import { getTranslations } from "@/lib/i18n.client";
+export default function TopNavigationBar({ lang }: { lang: string }) {
+  const t = getTranslations(lang);
+
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
-    <Link
-      href={`/${communitySlug}?account=${account}`}
-      className="w-full text-black"
-    >
+    <div className="w-full text-black" onClick={handleBack}>
       <div className="flex flex-row text-left w-full mb-4 items-center dark:text-white">
         <div className="font-bold w-5">
           <svg
@@ -32,8 +30,8 @@ export default function TopNavigationBar({
             ></path>
           </svg>
         </div>
-        <div className="font-bold">{t("Marketplace")}</div>
+        <div className="font-bold">{t["Marketplace"]}</div>
       </div>
-    </Link>
+    </div>
   );
 }

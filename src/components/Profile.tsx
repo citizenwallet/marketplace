@@ -9,21 +9,22 @@ import {
 } from "@citizenwallet/sdk";
 import { Translator } from "@/lib/i18n";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 export default async function Profile({
   communitySlug,
   config,
   profile,
   postId,
-  loggedInAccountAddress,
   lang,
+  searchParams,
 }: {
   communitySlug: string;
   config: Config;
   profile: ProfileWithTokenId;
   postId?: number;
-  loggedInAccountAddress?: string;
   lang: string;
+  searchParams: URLSearchParams;
 }) {
   const t = Translator(lang);
 
@@ -78,7 +79,7 @@ export default async function Profile({
                       <PostRow
                         key={post.id}
                         data={post}
-                        loggedInAccountAddress={loggedInAccountAddress}
+                        searchParams={searchParams}
                         lang={lang}
                       />
                     )

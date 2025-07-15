@@ -31,7 +31,14 @@ async function AsyncPage({
   searchParams,
 }: {
   params: { communitySlug: string };
-  searchParams: any;
+  searchParams: {
+    lang: string;
+    account?: string;
+    sigAuthAccount?: string;
+    sigAuthExpiry?: string;
+    sigAuthSignature?: string;
+    sigAuthRedirect?: string;
+  };
 }) {
   const communitySlug = params.communitySlug;
   const lang = getLanguage(searchParams.lang);
@@ -57,7 +64,8 @@ async function AsyncPage({
     }
   }
 
-  if (!account || account === "undefined") return <AccountRequiredError />;
+  if (!account || account === "undefined" || !isAddress(account))
+    return <AccountRequiredError />;
 
   const ipfsDomain = process.env.IPFS_DOMAIN;
   if (!ipfsDomain) return <div>IPFS domain not set</div>;
@@ -70,11 +78,7 @@ async function AsyncPage({
 
   return (
     <main className="flex min-h-screen flex-col items-center p-4 mb-4">
-      <TopNavigationBar
-        communitySlug={communitySlug}
-        account={account}
-        lang={lang}
-      />
+      <TopNavigationBar lang={lang} />
       {!profile && (
         <div className="flex flex-col justify-center h-full">
           <div className="text-2xl font-bold">Profile missing</div>

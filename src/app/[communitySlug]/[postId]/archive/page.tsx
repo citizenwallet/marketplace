@@ -13,7 +13,13 @@ export default function Page({
   searchParams,
 }: {
   params: { communitySlug: string; postId: string };
-  searchParams: { account: string };
+  searchParams: {
+    account: string;
+    sigAuthAccount?: string;
+    sigAuthExpiry?: string;
+    sigAuthSignature?: string;
+    sigAuthRedirect?: string;
+  };
 }) {
   return (
     <Suspense fallback={<GenericLoadingPage />}>
@@ -27,7 +33,13 @@ async function AsyncPage({
   searchParams,
 }: {
   params: { communitySlug: string; postId: string };
-  searchParams: { account?: string };
+  searchParams: {
+    account?: string;
+    sigAuthAccount?: string;
+    sigAuthExpiry?: string;
+    sigAuthSignature?: string;
+    sigAuthRedirect?: string;
+  };
 }) {
   const post = await getPost(parseInt(params.postId));
 

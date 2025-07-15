@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,13 +22,15 @@ export default function ArchiveConfirmation({
   postId: string;
   account: string;
 }) {
+  const searchParams = useSearchParams();
+
   const router = useRouter();
 
   const handleConfirm = async () => {
     try {
       await archivePostAction(communitySlug, account, parseInt(postId));
 
-      router.push(`/${communitySlug}?account=${account}`);
+      router.push(`/${communitySlug}?${searchParams.toString()}`);
     } catch (error) {
       console.error(error);
     }

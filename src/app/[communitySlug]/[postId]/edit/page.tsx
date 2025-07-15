@@ -15,7 +15,14 @@ export default async function Page({
   searchParams,
 }: {
   params: { communitySlug: string; postId: string };
-  searchParams: any;
+  searchParams: {
+    lang: string;
+    account?: string;
+    sigAuthAccount?: string;
+    sigAuthExpiry?: string;
+    sigAuthSignature?: string;
+    sigAuthRedirect?: string;
+  };
 }) {
   return (
     <Suspense fallback={<GenericLoadingPage />}>
@@ -32,6 +39,10 @@ async function AsyncPage({
   searchParams: {
     lang: string;
     account?: string;
+    sigAuthAccount?: string;
+    sigAuthExpiry?: string;
+    sigAuthSignature?: string;
+    sigAuthRedirect?: string;
   };
 }) {
   const lang = getLanguage(searchParams.lang);
@@ -62,7 +73,8 @@ async function AsyncPage({
     }
   }
 
-  if (!account || account === "undefined") return <div>Account required</div>;
+  if (!account || account === "undefined" || !isAddress(account))
+    return <AccountRequiredError />;
 
   const ipfsDomain = process.env.IPFS_DOMAIN;
   if (!ipfsDomain) return <div>IPFS domain not set</div>;
@@ -76,11 +88,7 @@ async function AsyncPage({
 
   return (
     <main className="flex min-h-screen flex-col p-4 mb-4">
-      <TopNavigationBar
-        communitySlug={params.communitySlug}
-        account={account}
-        lang={lang}
-      />
+      <TopNavigationBar lang={lang} />
       <div className="items-center">
         <EditPost
           id={parseInt(params.postId)}

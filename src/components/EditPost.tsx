@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TagInput from "./TagInput";
 import moment from "moment";
 import "moment/locale/fr";
@@ -36,7 +36,6 @@ import {
   Config,
   ProfileWithTokenId,
 } from "@citizenwallet/sdk";
-import { revalidatePath } from "next/cache";
 
 export default function EditPost({
   id,
@@ -53,6 +52,8 @@ export default function EditPost({
   data: posts;
   lang: string;
 }) {
+  const searchParams = useSearchParams();
+
   const t = Translator(lang);
   moment.locale(lang);
   const router = useRouter();
@@ -132,7 +133,7 @@ export default function EditPost({
 
     await updatePostAction(communitySlug, id, updatedData);
 
-    router.push(`/${communitySlug}/${formData.id}?account=${profile.account}`);
+    router.push(`/${communitySlug}/${formData.id}?${searchParams.toString()}`);
     setLoading(false);
     return false;
   };

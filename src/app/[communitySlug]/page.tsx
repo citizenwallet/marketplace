@@ -36,6 +36,8 @@ export default async function AsyncPage({
   const type = searchParams.type;
   let account = searchParams.account;
 
+  const connectionParams = new URLSearchParams(searchParams);
+
   if (!account || account === "undefined" || !isAddress(account)) {
     try {
       const community = new CommunityConfig(config);
@@ -44,6 +46,8 @@ export default async function AsyncPage({
         (await verifyConnectedUrl(community, {
           params: new URLSearchParams(searchParams),
         })) ?? undefined;
+
+      console.log("verified account", account);
     } catch (error) {
       console.error("Account verification error:", error);
       return <AccountRequiredError />;
@@ -67,7 +71,9 @@ export default async function AsyncPage({
             <div className="flex items-center gap-3 justify-between">
               <h1 className="text-3xl font-bold">{t("Marketplace")}</h1>
               <Link
-                href={`/${params.communitySlug}/new?account=${account}`}
+                href={`/${
+                  params.communitySlug
+                }/new?${connectionParams.toString()}`}
                 className="rounded-full p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-colors"
               >
                 <PlusIcon className="h-5 w-5" />
@@ -92,8 +98,8 @@ export default async function AsyncPage({
         <Suspense fallback={<GenericLoadingPage />}>
           <Posts
             communitySlug={params.communitySlug}
-            account={account}
             selectedTag={selectedTag}
+            searchParams={connectionParams}
             lang={lang}
             type={searchParams.type}
           />
